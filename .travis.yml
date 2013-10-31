@@ -4,6 +4,7 @@ node_js:
   - '0.10'
 before_script:
   - npm install -g grunt-cli
+  - ./create_config.sh
 env:
   global:
     secure: g3kS/J7wfL2EYZjAr72ZGcR1dOzNi8eXZZxwUuO893e1QTPr17KXBwZtcYWiHHxaqURxJbW80LW7qyy3Ua5VkakdELNnzEY2uGCICzx3k8cdREo1GdhpIRmOPdjR1tg0sG4EdZrvmHkHLY0V0x2TRJnHFEuHbCESrkcR8hT3HGA=
