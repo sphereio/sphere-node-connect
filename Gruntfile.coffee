@@ -69,17 +69,13 @@ module.exports = (grunt)->
         files: ["src/**/*.coffee"]
         tasks: ["test"]
 
-    jasmine_node:
+    shell:
       options:
-        specNameMatcher: "spec" # load only specs containing specNameMatcher
-        forceExit: true
-        source: "lib"
-        jUnit:
-          report: false
-          savePath : "./build/reports/jasmine/"
-          useDotNotation: true,
-          consolidate: true
-      default: ["test/"]
+        stdout: true
+        stderr: true
+        failOnError: true
+      jasmine:
+        command: "jasmine-node --captureExceptions test"
 
   # load plugins that provide the tasks defined in the config
   grunt.loadNpmTasks "grunt-coffeelint"
@@ -87,8 +83,8 @@ module.exports = (grunt)->
   grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-contrib-coffee"
   grunt.loadNpmTasks "grunt-contrib-watch"
-  grunt.loadNpmTasks "grunt-jasmine-node"
+  grunt.loadNpmTasks "grunt-shell"
 
   # register tasks
   grunt.registerTask "build", ["clean", "coffeelint", "coffee", "concat"]
-  grunt.registerTask "test", ["build", "jasmine_node"]
+  grunt.registerTask "test", ["build", "shell:jasmine"]
