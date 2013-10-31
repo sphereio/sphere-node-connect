@@ -26,8 +26,23 @@ exports.Rest = (opts = {})->
   @
 
 exports.Rest.prototype.GET = (resource, callback)->
-  options = @_options
-  _get = ->
+  params =
+    resource: resource
+    method: "GET"
+  exports.preRequest(@_options, params, callback)
+
+exports.Rest.prototype.POST = (resource, payload, callback)->
+  params =
+    resource: resource
+    method: "POST"
+    body: payload
+  exports.preRequest(@_options, params, callback)
+
+exports.Rest.prototype.PUT = -> #noop
+exports.Rest.prototype.DELETE = -> #noop
+
+exports.preRequest = (options, params, callback)->
+  _req = ->
     unless options.access_token
       exports.doAuth options.config, (data)->
         access_token = data.access_token
@@ -36,26 +51,16 @@ exports.Rest.prototype.GET = (resource, callback)->
           headers:
             "Authorization": "Bearer #{access_token}"
         # call itself again (this time with the access_token)
-        _get()
+        _req()
 
     request_options = _.clone(options.request)
     _.extend request_options,
-      uri: "#{request_options.uri}#{resource}"
-      method: "GET"
+      uri: "#{request_options.uri}#{params.resource}"
+      method: params.method
+    if params.body
+      request_options.body = params.body
     exports.doRequest(request_options, callback)
-  _get()
-
-exports.Rest.prototype.POST = (resource, payload, callback)->
-  options = _.clone(@_options.request)
-  _.extend options,
-    uri: "#{options.uri}#{resource}"
-    method: "POST"
-    body: payload
-
-  exports.doRequest(options, callback)
-
-exports.Rest.prototype.PUT = -> #noop
-exports.Rest.prototype.DELETE = -> #noop
+  _req()
 
 exports.doRequest = (options, callback)->
   request options, (error, response, body)->
