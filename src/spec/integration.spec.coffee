@@ -22,3 +22,9 @@ describe "Integration test", ->
       expect(results.length).toBeGreaterThan 0
       expect(results[0].id).toEqual jasmine.any(String)
       done()
+
+  it "should return 404 if product is not found", (done)->
+    rest = new Rest Config
+    rest.GET "/products/123", (error, response, body)->
+      expect(response.statusCode).toBe 404
+      done()
