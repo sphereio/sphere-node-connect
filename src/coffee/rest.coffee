@@ -52,14 +52,14 @@ exports.preRequest = (options, params, callback)->
             "Authorization": "Bearer #{access_token}"
         # call itself again (this time with the access_token)
         _req()
-
-    request_options = _.clone(options.request)
-    _.extend request_options,
-      uri: "#{request_options.uri}#{params.resource}"
-      method: params.method
-    if params.body
-      request_options.body = params.body
-    exports.doRequest(request_options, callback)
+    else
+      request_options = _.clone(options.request)
+      _.extend request_options,
+        uri: "#{request_options.uri}#{params.resource}"
+        method: params.method
+      if params.body
+        request_options.body = params.body
+      exports.doRequest(request_options, callback)
   _req()
 
 exports.doRequest = (options, callback)->

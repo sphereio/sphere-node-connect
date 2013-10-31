@@ -15,12 +15,3 @@ describe "OAuth2", ->
       delete opt[key]
       oa = -> new OAuth2 opt
       expect(oa).toThrow new Error("Missing '#{key}'")
-
-describe "OAuth2.getAccessToken", ->
-  beforeEach ->
-    @oa = new OAuth2 Config
-
-  it "should send request for access token", (done)->
-    @oa.getAccessToken (data)->
-      expect(data.access_token).toBeDefined()
-      done()

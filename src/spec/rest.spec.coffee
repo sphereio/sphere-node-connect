@@ -32,11 +32,12 @@ describe "exports", ->
 
   beforeEach ->
     @lib = require("../lib/rest")
-    spyOn(@lib, "doRequest")
 
-  it "should call doRequest", ->
-    @lib.doRequest()
-    expect(@lib.doRequest).toHaveBeenCalled()
+  _.each ["preRequest", "doRequest", "doAuth"], (method)->
+    it "should call #{method}", ->
+      spyOn(@lib, "#{method}")
+      @lib[method]()
+      expect(@lib[method]).toHaveBeenCalled()
 
 describe "Rest requests", ->
 
