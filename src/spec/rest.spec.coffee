@@ -35,7 +35,7 @@ describe "Rest.GET", ->
     spyOn(@lib, "doRequest").andCallFake((options, callback)-> callback(null, null, {id: "123"}))
     spyOn(@lib, "doAuth").andCallFake((callback)-> callback({access_token: "foo"}))
 
-  xit "should send GET request", (done)->
+  it "should send GET request", (done)->
     rest = new Rest
       project_key: Config.project_key
       access_token: "foo"
