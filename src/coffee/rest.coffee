@@ -13,6 +13,7 @@ exports.Rest = (opts = {})->
       client_secret: opts.client_secret
       project_key: opts.project_key
     host: opts.host or "api.sphere.io"
+    access_token: opts.access_token or undefined
 
   _.extend @_options,
     request:
@@ -68,4 +69,6 @@ exports.doRequest = (options, callback)->
 
 exports.doAuth = (config = {}, callback)->
   oa = new OAuth2 config
-  oa.getAccessToken (data)-> callback(data)
+  oa.getAccessToken (error, response, body)->
+    data = JSON.parse(body)
+    callback(data)

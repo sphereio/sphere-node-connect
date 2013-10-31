@@ -7,7 +7,8 @@ describe "Integration test", ->
 
   it "should get access token", (done)->
     oa = new OAuth2 Config
-    oa.getAccessToken (data)->
+    oa.getAccessToken (error, response, body)->
+      data = JSON.parse(body)
       expect(data.access_token).toBeDefined()
       done()
 

@@ -32,8 +32,4 @@ exports.OAuth2.prototype.getAccessToken = (callback)->
     timeout: 20000
 
   request request_options, (error, response, body)->
-    if response.statusCode is 200
-      json_body = JSON.parse(body)
-      callback(json_body)
-    else
-      throw new Error("Failed to get Access Token.")
+    callback(error, response, body)

@@ -7,8 +7,8 @@ Install the module with: `npm install sphere-node-connect`
 
 ```javascript
 var sphere_connect = require('sphere-node-connect');
-var OAuth2 = sphere_connect.OAuth2;
-var Rest = sphere_connect.Rest;
+var oa = sphere_connect.OAuth2;
+var rest = sphere_connect.Rest;
 ```
 
 Define your SPHERE.IO credentials into a `config.js`
@@ -23,7 +23,48 @@ exports.config = {
 ```
 
 ## Documentation
-_(Coming soon)_
+The connector exposes 2 objects: `OAuth2` and `Rest`.
+
+The `OAuth2` is used to retrieve an `access_token`
+
+```javascript
+var oa = new OAuth2({
+  client_id: "",
+  client_secret: "",
+  project_key: "",
+  host: "auth.sphere.io", // optional
+  accessTokenUrl: "/oauth/token" // optional
+});
+oa.getAccessToken(function(error, response, body){
+  if (response.statusCode is 200) {
+    var data = JSON.parse(body);
+    var access_token = data.access_token;
+  } else
+    throw new Error("Failed to get Access Token.")
+})
+```
+
+The `Rest` is used to comunicate with the HTTP API.
+
+```javascript
+var rest = new Rest({
+  client_id: "",
+  client_secret: "",
+  project_key: "",
+  host: "api.sphere.io", // optional
+  access_token: "" // optional (if not provided it will automatically retrieve an access_token)
+});
+
+rest.GET("/product-projections", function(error, response, body){
+  var data = JSON.parse(body);
+  if (response.statusCode is 200) {
+  } else
+    console.log(data)
+})
+```
+
+Currently `GET` and `POST` are supported
+
 
 ## Examples
 _(Coming soon)_
