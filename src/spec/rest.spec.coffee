@@ -21,6 +21,13 @@ describe "Rest", ->
         timeout: 20000
     expect(@rest._options).toEqual expected_options
 
+  _.each ["client_id", "client_secret", "project_key"], (key)->
+    it "should throw error if no '#{key}' is defined", ->
+      opt = _.clone(Config)
+      delete opt[key]
+      rest = -> new Rest opt
+      expect(rest).toThrow new Error("Missing '#{key}'")
+
 describe "exports", ->
 
   beforeEach ->
