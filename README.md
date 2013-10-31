@@ -1,6 +1,6 @@
 # sphere-node-connect [![Build Status](https://secure.travis-ci.org/emmenko/sphere-node-connect.png?branch=master)](http://travis-ci.org/emmenko/sphere-node-connect)
 
-Quick and easy way to connect your Node.js app with SPHERE.IO.
+Quick and easy way to connect your Node.js app with [SPHERE.IO](http://sphere.io).
 
 ## Getting Started
 Install the module with: `npm install sphere-node-connect`
@@ -35,13 +35,7 @@ var oa = new OAuth2({
   host: "auth.sphere.io", // optional
   accessTokenUrl: "/oauth/token" // optional
 });
-oa.getAccessToken(function(error, response, body){
-  if (response.statusCode is 200) {
-    var data = JSON.parse(body);
-    var access_token = data.access_token;
-  } else
-    throw new Error("Failed to get Access Token.")
-})
+oa.getAccessToken(callback)
 ```
 
 The `Rest` is used to comunicate with the HTTP API.
@@ -55,19 +49,52 @@ var rest = new Rest({
   access_token: "" // optional (if not provided it will automatically retrieve an access_token)
 });
 
-rest.GET("/product-projections", function(error, response, body){
-  var data = JSON.parse(body);
-  if (response.statusCode is 200) {
-  } else
-    console.log(data)
-})
+rest.GET(resource, callback)
+rest.POST(resource, payload, callback)
 ```
 
-Currently `GET` and `POST` are supported
+Currently `GET` and `POST` are supported.
 
 
 ## Examples
-_(Coming soon)_
+```javascript
+oa.getAccessToken(function(error, response, body){
+  if (response.statusCode is 200) {
+    var data = JSON.parse(body);
+    var access_token = data.access_token;
+  } else
+    throw new Error("Failed to get Access Token.")
+})
+```
+
+```javascript
+// Get a list of all products
+rest.GET("/products", function(error, response, body){
+  var data = JSON.parse(body);
+  console.log(data);
+});
+
+// Create a new product
+rest.POST("/products", {
+  name: { en: "Foo" },
+  slug: { en: "foo" }
+  productType: { id: "123", typeId: "product-type" }
+}, function(error, response, body){
+  var data = JSON.parse(body);
+  console.log(data);
+});
+
+// Update a product
+rest.POST("/products/123", {
+  version: 1,
+  actions: [
+    { action: "changeName", name: { en: "Boo" } }
+  ]
+}, function(error, response, body){
+  var data = JSON.parse(body);
+  console.log(data);
+});
+```
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
