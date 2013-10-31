@@ -31,51 +31,64 @@ describe "Rest", ->
 describe "exports", ->
 
   beforeEach ->
-    @rest = require("../lib/rest")
-    spyOn(@rest, "doRequest")
+    @lib = require("../lib/rest")
+    spyOn(@lib, "doRequest")
 
   it "should call doRequest", ->
-    @rest.doRequest()
-    expect(@rest.doRequest).toHaveBeenCalled()
+    @lib.doRequest()
+    expect(@lib.doRequest).toHaveBeenCalled()
 
-describe "Rest.GET", ->
+describe "Rest requests", ->
 
   beforeEach ->
     @lib = require("../lib/rest")
     spyOn(@lib, "doRequest").andCallFake((options, callback)-> callback(null, null, {id: "123"}))
     spyOn(@lib, "doAuth").andCallFake((config, callback)-> callback({access_token: "foo"}))
 
-  it "should send GET request", (done)->
     opts = _.clone(Config)
     opts.access_token = "foo"
-    rest = new Rest opts
+    @rest = new Rest opts
 
+  prepareRequest = (done, f)->
     callMe = (e, r, b)->
       expect(b.id).toBe "123"
       done()
-    rest.GET("/product-projections", callMe)
-
     expected_options =
       uri: "https://api.sphere.io/#{Config.project_key}/product-projections"
       method: "GET"
       headers:
         "Authorization": "Bearer foo"
       timeout: 20000
-    expect(@lib.doRequest).toHaveBeenCalledWith(expected_options, jasmine.any(Function))
+    f(callMe, expected_options)
+
+  it "should send GET request", (done)->
+    prepareRequest done, (callMe, expected_options)=>
+      @rest.GET("/product-projections", callMe)
+      expect(@lib.doRequest).toHaveBeenCalledWith(expected_options, jasmine.any(Function))
 
   it "should send GET request withOAuth", (done)->
     rest = new Rest Config
+    prepareRequest done, (callMe, expected_options)=>
+      rest.GET("/product-projections", callMe)
+      expect(@lib.doAuth).toHaveBeenCalledWith(Config, jasmine.any(Function))
+      expect(@lib.doRequest).toHaveBeenCalledWith(expected_options, jasmine.any(Function))
 
-    callMe = (e, r, b)->
-      expect(b.id).toBe "123"
-      done()
-    rest.GET("/product-projections", callMe)
+  it "should send POST request", (done)->
+    prepareRequest done, (callMe, expected_options)=>
+      @rest.POST("/products", {name: "Foo"}, callMe)
+      _.extend expected_options,
+        uri: "https://api.sphere.io/#{Config.project_key}/products"
+        method: "POST"
+        body: {name: "Foo"}
+      expect(@lib.doRequest).toHaveBeenCalledWith(expected_options, jasmine.any(Function))
 
-    expect(@lib.doAuth).toHaveBeenCalledWith(Config, jasmine.any(Function))
-    expected_options =
-      uri: "https://api.sphere.io/#{Config.project_key}/product-projections"
-      method: "GET"
-      headers:
-        "Authorization": "Bearer foo"
-      timeout: 20000
-    expect(@lib.doRequest).toHaveBeenCalledWith(expected_options, jasmine.any(Function))
+  it "should send POST request withOAuth", (done)->
+    rest = new Rest Config
+    prepareRequest done, (callMe, expected_options)=>
+      rest.POST("/products", {name: "Foo"}, callMe)
+      _.extend expected_options,
+        uri: "https://api.sphere.io/#{Config.project_key}/products"
+        method: "POST"
+        body: {name: "Foo"}
+      expect(@lib.doAuth).toHaveBeenCalledWith(Config, jasmine.any(Function))
+      expect(@lib.doRequest).toHaveBeenCalledWith(expected_options, jasmine.any(Function))
