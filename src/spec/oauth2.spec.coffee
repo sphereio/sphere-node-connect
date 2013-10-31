@@ -20,7 +20,7 @@ describe "OAuth2.getAccessToken", ->
   beforeEach ->
     @oa = new OAuth2 Config
 
-  xit "should send request for access token", (done)->
+  it "should send request for access token", (done)->
     @oa.getAccessToken (data)->
       expect(data.access_token).toBeDefined()
       done()
