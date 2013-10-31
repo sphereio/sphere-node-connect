@@ -1,22 +1,25 @@
+_ = require("underscore")._
 Rest = require("../lib/rest").Rest
 Config = require('../config').config
 
 describe "Rest", ->
 
+  beforeEach ->
+    @rest = new Rest Config
+
   it "should initialize", ->
-    rest = new Rest()
-    expect(rest).toBeDefined()
+    expect(@rest).toBeDefined()
 
   it "should initialize with options", ->
-    rest = new Rest
-      project_key: Config.project_key
+    @rest = new Rest Config
 
-    expect(rest._options).toEqual
-      project_key: Config.project_key
+    expected_options =
+      config: Config
       host: "api.sphere.io"
       request:
         uri: "https://api.sphere.io/#{Config.project_key}"
         timeout: 20000
+    expect(@rest._options).toEqual expected_options
 
 describe "exports", ->
 
@@ -33,12 +36,12 @@ describe "Rest.GET", ->
   beforeEach ->
     @lib = require("../lib/rest")
     spyOn(@lib, "doRequest").andCallFake((options, callback)-> callback(null, null, {id: "123"}))
-    spyOn(@lib, "doAuth").andCallFake((callback)-> callback({access_token: "foo"}))
+    spyOn(@lib, "doAuth").andCallFake((config, callback)-> callback({access_token: "foo"}))
 
   it "should send GET request", (done)->
-    rest = new Rest
-      project_key: Config.project_key
-      access_token: "foo"
+    opts = _.clone(Config)
+    opts.access_token = "foo"
+    rest = new Rest opts
 
     callMe = (e, r, b)->
       expect(b.id).toBe "123"
@@ -54,15 +57,14 @@ describe "Rest.GET", ->
     expect(@lib.doRequest).toHaveBeenCalledWith(expected_options, jasmine.any(Function))
 
   it "should send GET request withOAuth", (done)->
-    rest = new Rest
-      project_key: Config.project_key
+    rest = new Rest Config
 
     callMe = (e, r, b)->
       expect(b.id).toBe "123"
       done()
     rest.GET("/product-projections", callMe)
 
-    expect(@lib.doAuth).toHaveBeenCalledWith(jasmine.any(Function))
+    expect(@lib.doAuth).toHaveBeenCalledWith(Config, jasmine.any(Function))
     expected_options =
       uri: "https://api.sphere.io/#{Config.project_key}/product-projections"
       method: "GET"
