@@ -77,7 +77,7 @@ rest.GET("/products", function(error, response, body){
 // Create a new product
 rest.POST("/products", {
   name: { en: "Foo" },
-  slug: { en: "foo" }
+  slug: { en: "foo" },
   productType: { id: "123", typeId: "product-type" }
 }, function(error, response, body){
   var data = JSON.parse(body);
