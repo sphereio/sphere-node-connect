@@ -76,6 +76,8 @@ module.exports = (grunt)->
         failOnError: true
       jasmine:
         command: "jasmine-node --captureExceptions test"
+      publish:
+        command: "npm publish"
 
     bump:
       options:
@@ -105,4 +107,4 @@ module.exports = (grunt)->
   grunt.registerTask "test", ["build", "shell:jasmine"]
   grunt.registerTask "release", "Release a new version, push it and publish it", (target)->
     target = "patch" unless target
-    grunt.task.run "bump-only:#{target}", "build", "bump-commit"
+    grunt.task.run "bump-only:#{target}", "build", "bump-commit", "shell:publish"
