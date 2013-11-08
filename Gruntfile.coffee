@@ -80,6 +80,7 @@ module.exports = (grunt)->
     bump:
       options:
         files: ["package.json"]
+        updateConfigs: ["pkg"]
         commit: true
         commitMessage: "Bump version to %VERSION%"
         commitFiles: ["-a"]
