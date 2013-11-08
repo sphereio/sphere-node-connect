@@ -2,6 +2,13 @@
   "name": "sphere-node-connect",
   "description": "Quick and easy way to connect your Node.js app with SPHERE.IO.",
   "version": "0.0.2",
+  "keywords": [
+    "sphere",
+    "api",
+    "connect",
+    "oauth",
+    "oauth2",
+  ],
   "homepage": "https://github.com/emmenko/sphere-node-connect",
   "author": {
     "name": "Nicola Molinari",
@@ -40,7 +47,7 @@
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-coffee": "~0.7.0",
     "grunt-contrib-watch": "~0.5.3",
+    "grunt-release": "~0.6.0",
     "jasmine-node": "~1.11.0"
-  },
-  "keywords": []
+  }
 }
