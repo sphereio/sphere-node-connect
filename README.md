@@ -100,12 +100,12 @@ rest.POST("/products/123", {
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Releasing
-Releasing a new version is completely automated using the Grunt task `grunt bump`.
+Releasing a new version is completely automated using the Grunt task `grunt release`.
 
 ```javascript
-grunt bump // patch release
-grunt bump:minor // minor release
-grunt bump:major // major release
+grunt release // patch release
+grunt release:minor // minor release
+grunt release:major // major release
 ```
 
 ## License
