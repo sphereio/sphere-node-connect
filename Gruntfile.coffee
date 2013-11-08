@@ -77,19 +77,18 @@ module.exports = (grunt)->
       jasmine:
         command: "jasmine-node --captureExceptions test"
 
-    release:
+    bump:
       options:
-        bump: true
-        file: "package.json"
-        add: true
+        files: ["package.json"]
         commit: true
-        tag: true
+        commitMessage: "Bump version to %VERSION%"
+        commitFiles: ["-a"]
+        createTag: true
+        tagName: "v%VERSION%"
+        tagMessage: "Version %VERSION%"
         push: true
-        pushTags: true
-        npm: true
-        tagName: "v<%= version %>"
-        commitMessage: "Bump version to <%= version %>"
-        tagMessage: "Version <%= version %>"
+        pushTo: "upstream"
+        gitDescribeOptions: "--tags --always --abbrev=1 --dirty=-d"
 
   # load plugins that provide the tasks defined in the config
   grunt.loadNpmTasks "grunt-coffeelint"
@@ -98,11 +97,11 @@ module.exports = (grunt)->
   grunt.loadNpmTasks "grunt-contrib-coffee"
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-shell"
-  grunt.loadNpmTasks "grunt-release"
+  grunt.loadNpmTasks "grunt-bump"
 
   # register tasks
   grunt.registerTask "build", ["clean", "coffeelint", "coffee", "concat"]
   grunt.registerTask "test", ["build", "shell:jasmine"]
-  grunt.registerTask "bump", "Release a new version, push it and publish it", (target)->
+  grunt.registerTask "release", "Release a new version, push it and publish it", (target)->
     target = "patch" unless target
-    grunt.task.run "build", "release:#{target}"
+    grunt.task.run "bump-only:#{target}", "build", "bump-commit"
