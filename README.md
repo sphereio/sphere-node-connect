@@ -1,4 +1,4 @@
-# sphere-node-connect [![Build Status](https://secure.travis-ci.org/emmenko/sphere-node-connect.png?branch=master)](http://travis-ci.org/emmenko/sphere-node-connect)
+# sphere-node-connect [![Build Status](https://secure.travis-ci.org/emmenko/sphere-node-connect.png?branch=master)](http://travis-ci.org/emmenko/sphere-node-connect) [![NPM version](https://badge.fury.io/js/sphere-node-connect.png)](http://badge.fury.io/js/sphere-node-connect)
 
 Quick and easy way to connect your Node.js app with [SPHERE.IO](http://sphere.io).
 
