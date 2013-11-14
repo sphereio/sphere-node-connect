@@ -43,16 +43,25 @@ exports.Rest.prototype.PUT = -> #noop
 exports.Rest.prototype.DELETE = -> #noop
 
 exports.preRequest = (options, params, callback)->
-  _req = ->
+  _req = (retry)->
     unless options.access_token
-      exports.doAuth options.config, (data)->
-        access_token = data.access_token
-        options.access_token = access_token
-        _.extend options.request,
-          headers:
-            "Authorization": "Bearer #{access_token}"
-        # call itself again (this time with the access_token)
-        _req()
+      exports.doAuth options.config, (error, response, body)->
+        if response.statusCode is 200
+          data = JSON.parse(body)
+          access_token = data.access_token
+          options.access_token = access_token
+          _.extend options.request,
+            headers:
+              "Authorization": "Bearer #{access_token}"
+          # call itself again (this time with the access_token)
+          _req(0)
+        else
+          # try again to get an access token
+          if retry is 10
+            throw new Error "Could not retrive access_token after 10 attempts"
+          else
+            retry++
+            _req(retry)
     else
       request_options = _.clone(options.request)
       _.extend request_options,
@@ -61,14 +70,11 @@ exports.preRequest = (options, params, callback)->
       if params.body
         request_options.body = params.body
       exports.doRequest(request_options, callback)
-  _req()
+  _req(0)
 
 exports.doRequest = (options, callback)->
-  request options, (error, response, body)->
-    callback(error, response, body)
+  request options, callback
 
 exports.doAuth = (config = {}, callback)->
   oa = new OAuth2 config
-  oa.getAccessToken (error, response, body)->
-    data = JSON.parse(body)
-    callback(data)
+  oa.getAccessToken callback

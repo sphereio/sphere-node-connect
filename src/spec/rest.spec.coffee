@@ -44,7 +44,7 @@ describe "Rest requests", ->
   beforeEach ->
     @lib = require("../lib/rest")
     spyOn(@lib, "doRequest").andCallFake((options, callback)-> callback(null, null, {id: "123"}))
-    spyOn(@lib, "doAuth").andCallFake((config, callback)-> callback({access_token: "foo"}))
+    spyOn(@lib, "doAuth").andCallFake((config, callback)-> callback(null, {statusCode: 200}, JSON.stringify(access_token: "foo")))
 
     opts = _.clone(Config)
     opts.access_token = "foo"
@@ -93,3 +93,9 @@ describe "Rest requests", ->
         body: {name: "Foo"}
       expect(@lib.doAuth).toHaveBeenCalledWith(Config, jasmine.any(Function))
       expect(@lib.doRequest).toHaveBeenCalledWith(expected_options, jasmine.any(Function))
+
+  it "should fail to getting an access_token after 10 attempts", ->
+    @lib.doAuth.isSpy = false
+    spyOn(@lib, "doAuth").andCallFake((config, callback)-> callback(null, {statusCode: 500}, null))
+    req = => @lib.preRequest({}, {}, ->)
+    expect(req).toThrow new Error("Could not retrive access_token after 10 attempts")
