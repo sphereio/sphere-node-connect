@@ -14,7 +14,7 @@ describe "Integration test", ->
 
   it "should get products", (done)->
     rest = new Rest Config
-    rest.GET "/product-projections", (error, response, body)->
+    rest.GET "/products", (error, response, body)->
       expect(response.statusCode).toBe 200
       json = JSON.parse(body)
       expect(json).toBeDefined()
@@ -37,6 +37,6 @@ describe "Integration test", ->
       value: "bar"
     rest.POST "/custom-objects", JSON.stringify(d), (error, response, body)->
       expect(response.statusCode).toBe 201
-      rest.DELETE "/custom-objects/integration/foo", '', (error, response, body)->
+      rest.DELETE "/custom-objects/integration/foo", (error, response, body)->
         expect(response.statusCode).toBe 200
         done()

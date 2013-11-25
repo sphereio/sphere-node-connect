@@ -39,11 +39,10 @@ exports.Rest.prototype.POST = (resource, payload, callback)->
     body: payload
   exports.preRequest(@_options, params, callback)
 
-exports.Rest.prototype.DELETE = (resource, payload, callback)->
+exports.Rest.prototype.DELETE = (resource, callback)->
   params =
     resource: resource
     method: "DELETE"
-    body: payload
   exports.preRequest(@_options, params, callback)
 
 exports.Rest.prototype.PUT = -> #noop
