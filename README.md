@@ -94,6 +94,17 @@ rest.POST("/products/123", {
   var data = JSON.parse(body);
   console.log(data);
 });
+
+// Delete a product
+rest.DELETE("/product/abc?version=3", function(error, response, body) {
+  if (response.statusCode == 200) {
+    console.log("Product successfully deleted.");
+  } else if (response.statusCode == 404) {
+    console.log("Product does not exist.");
+  } else if (response.statusCode == 400) {
+    console.log("Product version does not match.");
+  }
+});
 ```
 
 ## Contributing
