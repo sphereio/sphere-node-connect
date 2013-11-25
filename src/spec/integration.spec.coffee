@@ -28,3 +28,15 @@ describe "Integration test", ->
     rest.GET "/products/123", (error, response, body)->
       expect(response.statusCode).toBe 404
       done()
+
+  it "should create an delete custom object", (done)->
+    rest = new Rest Config
+    d =
+      container: "integration",
+      key: "foo",
+      value: "bar"
+    rest.POST "/custom-objects", JSON.stringify(d), (error, response, body)->
+      expect(response.statusCode).toBe 201
+      rest.DELETE "/custom-objects/integration/foo", '', (error, response, body)->
+        expect(response.statusCode).toBe 200
+        done()
