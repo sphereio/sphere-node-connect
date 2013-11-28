@@ -10,3 +10,12 @@ env:
   - secure: i3vxMhYUXHzv2r6tGAP5cLGgJrEmoSXk241qgonIe2Af4md92Bib/LL2U5lDB6HcFWTIC1BMWH7FgiFTlZDsebmMS/m+Pwhp6p/3ZT2M6OEYYhbfEgJYEaHXQDU1asP/apoYlHYx0RNpNq0EamK+V1+Gcugk0v3f2Pc1FO8IMmQ=
   - secure: FQxDiwlTiXvb1oEnOyfkFGGRYeX+OvwN78OchzVqOG/guQ8EPU4gAaXtxAuWUnjsd88V4dRyyhfJApjfoEjC83ZX0Kaw1FNAp5lNV5dQ3QgwsCPnvqABtDkdUokJLcoUXZyVv3S1BHdAe72zulLgfFfYq+0TWm2yAx1efWg+4TM=
   - secure: Gwa4Zqe4h90pHY5bmlwYKLv0DzKsyfpXnuPYRjU1+ZHvExtSIRos0WFlUQYT6tyEDf5rDNkZ1M+HXsN+hu/QuPjlYV/RmVG+rkrR6UOapMbH1nkDzbltuLw2yVlwNQIVUv4DYYat1b1a3mUk00+noSeCIt+325HcSYX1/lqbxS8=
+notifications:
+  hipchat:
+    rooms:
+      - secure: OyYihFKiR7xbI78D+NH8fPp0St3TPgSIDSTD8pgNAvMRGbwJyrpbNxDHrtHNONQ7FDD7xNUcCq7fCMVJOq6Esy7dv1ImiM0MDGM3MHv7OD6fpUCaUwnn5BAJTEPvqhuSOKPw9vrHc2pvFc0htnc1qnxPZxkJOyGvvQ75qlofWj0=
+    template:
+      - '%{repository}#%{build_number} (%{author}): %{message} (<a href="%{build_url}">Details</a> <a href="%{compare_url}">Compare</a>)'
+    format: html
+    on_success: change
+    on_failure: always
