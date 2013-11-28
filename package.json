@@ -35,8 +35,8 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "request": "2.9.x",
-    "randomstring": "1.0.x",
+    "request": "~2.27.0",
+    "randomstring": "~1.0.x",
     "underscore": "~1.5.2"
   },
   "devDependencies": {
