@@ -11,17 +11,6 @@ var oa = sphere_connect.OAuth2;
 var rest = sphere_connect.Rest;
 ```
 
-Define your SPHERE.IO credentials into a `config.js`
-
-```javascript
-/* SPHERE.IO credentials */
-exports.config = {
-  client_id: "",
-  client_secret: "",
-  project_key: ""
-}
-```
-
 ## Documentation
 The connector exposes 2 objects: `OAuth2` and `Rest`.
 
@@ -29,11 +18,15 @@ The `OAuth2` is used to retrieve an `access_token`
 
 ```javascript
 var oa = new OAuth2({
-  client_id: "",
-  client_secret: "",
-  project_key: "",
+  config: {
+    client_id: "",
+    client_secret: "",
+    project_key: ""
+  },
   host: "auth.sphere.io", // optional
-  accessTokenUrl: "/oauth/token" // optional
+  accessTokenUrl: "/oauth/token" // optional,
+  timeout: 20000, // optional
+  rejectUnauthorized: true // optional
 });
 oa.getAccessToken(callback)
 ```
@@ -42,18 +35,25 @@ The `Rest` is used to comunicate with the HTTP API.
 
 ```javascript
 var rest = new Rest({
-  client_id: "",
-  client_secret: "",
-  project_key: "",
+  config: {
+    client_id: "",
+    client_secret: "",
+    project_key: ""
+  },
   host: "api.sphere.io", // optional
-  access_token: "" // optional (if not provided it will automatically retrieve an access_token)
+  access_token: "", // optional (if not provided it will automatically retrieve an access_token)
+  timeout: 20000, // optional
+  rejectUnauthorized: true, // optional
+  oauth_host: "auth.sphere.io" // optional (used when retrieving the access_token internally) 
 });
 
 rest.GET(resource, callback)
 rest.POST(resource, payload, callback)
 ```
 
-Currently `GET` and `POST` are supported.
+The `Rest` object, when instantiated, has an internal instance of the `OAuth` module accessible with `rest._oauth`. This is mainly used internally to automatically retrieve an `access_token`.
+
+Currently `GET`, `POST` and `DELETE` are supported.
 
 
 ## Examples
@@ -109,6 +109,28 @@ rest.DELETE("/product/abc?version=3", function(error, response, body) {
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
+
+Define your SPHERE.IO credentials into a `config.js`. Since the tests run against 2 projects on different environments you need to provide the credentials for both. If you just have one project You can provide the same credentials for both. 
+
+```javascript
+/* SPHERE.IO credentials */
+exports.config = {
+  staging: {
+    client_id: "",
+    client_secret: "",
+    project_key: "",
+    oauth_host: "auth.sphere.io",
+    api_host: "api.sphere.io"
+  },
+  prod: {
+    client_id: "",
+    client_secret: "",
+    project_key: "",
+    oauth_host: "auth.sphere.io",
+    api_host: "api.sphere.io"
+  }
+}
+```
 
 ## Releasing
 Releasing a new version is completely automated using the Grunt task `grunt release`.
