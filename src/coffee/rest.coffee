@@ -33,32 +33,32 @@ exports.Rest.prototype.GET = (resource, callback)->
   params =
     resource: resource
     method: "GET"
-  exports.preRequest(@_oauth, @_options, params, callback)
+  @preRequest(params, callback)
 
 exports.Rest.prototype.POST = (resource, payload, callback)->
   params =
     resource: resource
     method: "POST"
     body: payload
-  exports.preRequest(@_oauth, @_options, params, callback)
+  @preRequest(params, callback)
 
 exports.Rest.prototype.DELETE = (resource, callback)->
   params =
     resource: resource
     method: "DELETE"
-  exports.preRequest(@_oauth, @_options, params, callback)
+  @preRequest(params, callback)
 
 exports.Rest.prototype.PUT = -> #noop
 
-exports.preRequest = (oa, options, params, callback)->
-  _req = (retry)->
-    unless options.access_token
-      oa.getAccessToken (error, response, body)->
+exports.Rest.prototype.preRequest = (params, callback)->
+  _req = (retry)=>
+    unless @_options.access_token
+      @_oauth.getAccessToken (error, response, body)=>
         if response.statusCode is 200
           data = JSON.parse(body)
           access_token = data.access_token
-          options.access_token = access_token
-          _.extend options,
+          @_options.access_token = access_token
+          _.extend @_options,
             headers:
               "Authorization": "Bearer #{access_token}"
           # call itself again (this time with the access_token)
@@ -74,11 +74,11 @@ exports.preRequest = (oa, options, params, callback)->
             _req(retry)
     else
       request_options =
-        uri: "#{options.uri}#{params.resource}"
+        uri: "#{@_options.uri}#{params.resource}"
         method: params.method
-        headers: options.headers
-        timeout: options.timeout
-        rejectUnauthorized: options.rejectUnauthorized
+        headers: @_options.headers
+        timeout: @_options.timeout
+        rejectUnauthorized: @_options.rejectUnauthorized
 
       if params.body
         request_options.body = params.body

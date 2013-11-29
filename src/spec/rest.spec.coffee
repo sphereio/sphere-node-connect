@@ -61,7 +61,7 @@ describe "exports", ->
   beforeEach ->
     @lib = require("../lib/rest")
 
-  _.each ["preRequest", "doRequest"], (method)->
+  _.each ["doRequest"], (method)->
     it "should call #{method}", ->
       spyOn(@lib, "#{method}")
       @lib[method]()
@@ -132,7 +132,7 @@ describe "Rest requests", ->
   it "should fail to getting an access_token after 10 attempts", ->
     rest = new Rest config: Config
     spyOn(rest._oauth, "getAccessToken").andCallFake((callback)-> callback(null, {statusCode: 500}, null))
-    req = => @lib.preRequest(rest._oauth, {}, {}, ->)
+    req = -> rest.preRequest(rest._oauth, {}, {}, ->)
     expect(req).toThrow new Error "Could not retrive access_token after 10 attempts.\n" +
       "Status code: 500\n" +
       "Body: null\n"
