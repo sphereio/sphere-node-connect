@@ -12,12 +12,12 @@ _.each ["valid-ssl", "self-signed-ssl"], (mode)->
       if isSelfSigned
         @oa = new OAuth2
           config: Config.staging
-          host: "auth.escemo.com"
+          host: Config.staging.oauth_host
           rejectUnauthorized: false
         @rest = new Rest
           config: Config.staging
-          host: "api.escemo.com"
-          oauth_host: "auth.escemo.com"
+          host: Config.staging.api_host
+          oauth_host: Config.staging.oauth_host
           rejectUnauthorized: false
       else
         @oa = new OAuth2
