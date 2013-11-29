@@ -3,59 +3,62 @@ request = require("request")
 OAuth2 = require("./oauth2").OAuth2
 
 exports.Rest = (opts = {})->
-  throw new Error("Missing 'client_id'") unless opts.client_id
-  throw new Error("Missing 'client_secret'") unless opts.client_secret
-  throw new Error("Missing 'project_key'") unless opts.project_key
+  config = opts.config
+  throw new Error("Missing credentials") unless config
+  throw new Error("Missing 'client_id'") unless config.client_id
+  throw new Error("Missing 'client_secret'") unless config.client_secret
+  throw new Error("Missing 'project_key'") unless config.project_key
 
+  rejectUnauthorized = if _.isUndefined(opts.rejectUnauthorized) then true else opts.rejectUnauthorized
   @_options =
-    config:
-      client_id: opts.client_id
-      client_secret: opts.client_secret
-      project_key: opts.project_key
+    config: config
     host: opts.host or "api.sphere.io"
     access_token: opts.access_token or undefined
+    timeout: opts.timeout or 20000
+    rejectUnauthorized: rejectUnauthorized
+  @_options.uri = "https://#{@_options.host}/#{@_options.config.project_key}"
 
-  _.extend @_options,
-    request:
-      uri: "https://#{@_options.host}/#{@_options.config.project_key}"
-      timeout: 20000
+  oauth_options = _.clone(opts)
+  _.extend oauth_options,
+    host: opts.oauth_host
+  @_oauth = new OAuth2 oauth_options
 
   if @_options.access_token
-    _.extend @_options.request,
+    _.extend @_options,
       headers:
         "Authorization": "Bearer #{@_options.access_token}"
-  @
+  return
 
 exports.Rest.prototype.GET = (resource, callback)->
   params =
     resource: resource
     method: "GET"
-  exports.preRequest(@_options, params, callback)
+  exports.preRequest(@_oauth, @_options, params, callback)
 
 exports.Rest.prototype.POST = (resource, payload, callback)->
   params =
     resource: resource
     method: "POST"
     body: payload
-  exports.preRequest(@_options, params, callback)
+  exports.preRequest(@_oauth, @_options, params, callback)
 
 exports.Rest.prototype.DELETE = (resource, callback)->
   params =
     resource: resource
     method: "DELETE"
-  exports.preRequest(@_options, params, callback)
+  exports.preRequest(@_oauth, @_options, params, callback)
 
 exports.Rest.prototype.PUT = -> #noop
 
-exports.preRequest = (options, params, callback)->
+exports.preRequest = (oa, options, params, callback)->
   _req = (retry)->
     unless options.access_token
-      exports.doAuth options.config, (error, response, body)->
+      oa.getAccessToken (error, response, body)->
         if response.statusCode is 200
           data = JSON.parse(body)
           access_token = data.access_token
           options.access_token = access_token
-          _.extend options.request,
+          _.extend options,
             headers:
               "Authorization": "Bearer #{access_token}"
           # call itself again (this time with the access_token)
@@ -63,23 +66,26 @@ exports.preRequest = (options, params, callback)->
         else
           # try again to get an access token
           if retry is 10
-            throw new Error "Could not retrive access_token after 10 attempts"
+            throw new Error "Could not retrive access_token after 10 attempts.\n" +
+              "Status code: #{response.statusCode}\n" +
+              "Body: #{body}\n"
           else
             retry++
             _req(retry)
     else
-      request_options = _.clone(options.request)
-      _.extend request_options,
-        uri: "#{request_options.uri}#{params.resource}"
+      request_options =
+        uri: "#{options.uri}#{params.resource}"
         method: params.method
+        headers: options.headers
+        timeout: options.timeout
+        rejectUnauthorized: options.rejectUnauthorized
+
       if params.body
         request_options.body = params.body
+
       exports.doRequest(request_options, callback)
+
   _req(0)
 
 exports.doRequest = (options, callback)->
   request options, callback
-
-exports.doAuth = (config = {}, callback)->
-  oa = new OAuth2 config
-  oa.getAccessToken callback

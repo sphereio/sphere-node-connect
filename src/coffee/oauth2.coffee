@@ -1,20 +1,22 @@
+_ = require("underscore")._
 querystring = require('querystring')
 request = require('request')
-_ = require("underscore")._
 
 exports.OAuth2 = (opts = {})->
-  throw new Error("Missing 'client_id'") unless opts.client_id
-  throw new Error("Missing 'client_secret'") unless opts.client_secret
-  throw new Error("Missing 'project_key'") unless opts.project_key
+  config = opts.config
+  throw new Error("Missing credentials") unless config
+  throw new Error("Missing 'client_id'") unless config.client_id
+  throw new Error("Missing 'client_secret'") unless config.client_secret
+  throw new Error("Missing 'project_key'") unless config.project_key
 
+  rejectUnauthorized = if _.isUndefined(opts.rejectUnauthorized) then true else opts.rejectUnauthorized
   @_options =
-    config:
-      client_id: opts.client_id
-      client_secret: opts.client_secret
-      project_key: opts.project_key
+    config: config
     host: opts.host or "auth.sphere.io"
     accessTokenUrl: opts.accessTokenUrl or "/oauth/token"
-  @
+    timeout: opts.timeout or 20000
+    rejectUnauthorized: rejectUnauthorized
+  return
 
 exports.OAuth2.prototype.getAccessToken = (callback)->
   params =
@@ -29,7 +31,7 @@ exports.OAuth2.prototype.getAccessToken = (callback)->
     headers:
       "Content-Type": "application/x-www-form-urlencoded"
       "Content-Length": payload.length
-    timeout: 20000
+    timeout: @_options.timeout
+    rejectUnauthorized: @_options.rejectUnauthorized
 
-  request request_options, (error, response, body)->
-    callback(error, response, body)
+  request request_options, callback
