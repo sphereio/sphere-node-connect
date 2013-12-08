@@ -131,8 +131,15 @@ describe "Rest requests", ->
 
   it "should fail to getting an access_token after 10 attempts", ->
     rest = new Rest config: Config
-    spyOn(rest._oauth, "getAccessToken").andCallFake((callback)-> callback(null, {statusCode: 500}, null))
+    spyOn(rest._oauth, "getAccessToken").andCallFake((callback)-> callback(null, {statusCode: 401}, null))
     req = -> rest.preRequest(rest._oauth, {}, {}, ->)
-    expect(req).toThrow new Error "Could not retrive access_token after 10 attempts.\n" +
-      "Status code: 500\n" +
+    expect(req).toThrow new Error "Could not retrieve access_token after 10 attempts.\n" +
+      "Status code: 401\n" +
       "Body: null\n"
+
+  it "should fail on error", ->
+    rest = new Rest config: Config
+    spyOn(rest._oauth, "getAccessToken").andCallFake((callback)-> callback("Connection read timeout", null, null))
+    req = -> rest.preRequest(rest._oauth, {}, {}, ->)
+    expect(req).toThrow new Error "Error on retrieving access_token after 10 attempts.\n" +
+      "Error: Connection read timeout\n"

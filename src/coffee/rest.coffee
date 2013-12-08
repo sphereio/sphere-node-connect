@@ -54,7 +54,21 @@ exports.Rest.prototype.preRequest = (params, callback)->
   _req = (retry)=>
     unless @_options.access_token
       @_oauth.getAccessToken (error, response, body)=>
-        if response.statusCode is 200
+        if error
+          if retry is 10
+            throw new Error "Error on retrieving access_token after 10 attempts.\n" +
+              "Error: #{error}\n"
+          else
+            _req(retry + 1)
+        if response.statusCode != 200
+          # try again to get an access token
+          if retry is 10
+            throw new Error "Could not retrieve access_token after 10 attempts.\n" +
+              "Status code: #{response.statusCode}\n" +
+              "Body: #{body}\n"
+          else
+            _req(retry + 1)
+        else
           data = JSON.parse(body)
           access_token = data.access_token
           @_options.access_token = access_token
@@ -63,15 +77,6 @@ exports.Rest.prototype.preRequest = (params, callback)->
               "Authorization": "Bearer #{access_token}"
           # call itself again (this time with the access_token)
           _req(0)
-        else
-          # try again to get an access token
-          if retry is 10
-            throw new Error "Could not retrive access_token after 10 attempts.\n" +
-              "Status code: #{response.statusCode}\n" +
-              "Body: #{body}\n"
-          else
-            retry++
-            _req(retry)
     else
       request_options =
         uri: "#{@_options.uri}#{params.resource}"
