@@ -1,4 +1,6 @@
-# sphere-node-connect [![Build Status](https://secure.travis-ci.org/emmenko/sphere-node-connect.png?branch=master)](http://travis-ci.org/emmenko/sphere-node-connect) [![NPM version](https://badge.fury.io/js/sphere-node-connect.png)](http://badge.fury.io/js/sphere-node-connect) [![Dependency Status](https://gemnasium.com/emmenko/sphere-node-connect.png)](https://gemnasium.com/emmenko/sphere-node-connect)
+# sphere-node-connect 
+
+[![Build Status](https://secure.travis-ci.org/emmenko/sphere-node-connect.png?branch=master)](http://travis-ci.org/emmenko/sphere-node-connect) [![NPM version](https://badge.fury.io/js/sphere-node-connect.png)](http://badge.fury.io/js/sphere-node-connect) [![Coverage Status](https://coveralls.io/repos/emmenko/sphere-node-connect/badge.png?branch=master)](https://coveralls.io/r/emmenko/sphere-node-connect?branch=master) [![Dependency Status](https://gemnasium.com/emmenko/sphere-node-connect.png)](https://gemnasium.com/emmenko/sphere-node-connect)
 
 Quick and easy way to connect your Node.js app with [SPHERE.IO](http://sphere.io).
 
