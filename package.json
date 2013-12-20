@@ -32,7 +32,7 @@
     "node": ">= 0.8.0"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt coverage"
   },
   "dependencies": {
     "request": "~2.27.0",
