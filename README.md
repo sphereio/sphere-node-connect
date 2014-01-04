@@ -47,6 +47,7 @@ var rest = new Rest({
   timeout: 20000, // optional
   rejectUnauthorized: true, // optional
   oauth_host: "auth.sphere.io" // optional (used when retrieving the access_token internally) 
+  user_agent: 'my client v0.1' // optional
 });
 
 rest.GET(resource, callback)

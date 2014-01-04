@@ -10,12 +10,15 @@ exports.Rest = (opts = {})->
   throw new Error("Missing 'project_key'") unless config.project_key
 
   rejectUnauthorized = if _.isUndefined(opts.rejectUnauthorized) then true else opts.rejectUnauthorized
+  userAgent = if _.isUndefined(opts.user_agent) then 'sphere-node-connect' else opts.user_agent
   @_options =
     config: config
     host: opts.host or "api.sphere.io"
     access_token: opts.access_token or undefined
     timeout: opts.timeout or 20000
     rejectUnauthorized: rejectUnauthorized
+    headers:
+      'User-Agent': userAgent
   @_options.uri = "https://#{@_options.host}/#{@_options.config.project_key}"
 
   oauth_options = _.clone(opts)
@@ -24,9 +27,7 @@ exports.Rest = (opts = {})->
   @_oauth = new OAuth2 oauth_options
 
   if @_options.access_token
-    _.extend @_options,
-      headers:
-        "Authorization": "Bearer #{@_options.access_token}"
+    @_options.headers["Authorization"] = "Bearer #{@_options.access_token}"
   return
 
 exports.Rest.prototype.GET = (resource, callback)->
@@ -72,9 +73,7 @@ exports.Rest.prototype.preRequest = (params, callback)->
           data = JSON.parse(body)
           access_token = data.access_token
           @_options.access_token = access_token
-          _.extend @_options,
-            headers:
-              "Authorization": "Bearer #{access_token}"
+          @_options.headers["Authorization"] = "Bearer #{@_options.access_token}"
           # call itself again (this time with the access_token)
           _req(0)
     else

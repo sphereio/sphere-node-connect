@@ -90,6 +90,7 @@ describe "Rest requests", ->
       uri: "https://api.sphere.io/#{Config.project_key}/product-projections"
       method: "GET"
       headers:
+        "User-Agent": "sphere-node-connect"
         "Authorization": "Bearer foo"
       timeout: 20000
       rejectUnauthorized: true
