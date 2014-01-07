@@ -14,6 +14,7 @@ describe "Rest", ->
     expect(rest._options.uri).toBe "https://api.sphere.io/#{Config.project_key}"
     expect(rest._options.timeout).toBe 20000
     expect(rest._options.rejectUnauthorized).toBe true
+    expect(rest._options.headers["User-Agent"]).toBe "sphere-node-connect"
 
   it "should throw error if no credentials are given", ->
     rest = -> new Rest
@@ -55,6 +56,12 @@ describe "Rest", ->
       config: Config
       oauth_host: "auth.escemo.com"
     expect(rest._oauth._options.host).toBe "auth.escemo.com"
+
+  it "should pass 'user_agent' option", ->
+    rest = new Rest
+      config: Config
+      user_agent: "commercetools"
+    expect(rest._options.headers["User-Agent"]).toBe "commercetools"
 
 describe "exports", ->
 
