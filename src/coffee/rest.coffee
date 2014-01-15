@@ -60,7 +60,7 @@ exports.Rest.prototype.preRequest = (params, callback)->
             throw new Error "Error on retrieving access_token after 10 attempts.\n" +
               "Error: #{error}\n"
           else
-            _req(retry + 1)
+            return _req(retry + 1)
         if response.statusCode != 200
           # try again to get an access token
           if retry is 10
