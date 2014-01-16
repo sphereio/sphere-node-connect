@@ -31,8 +31,11 @@ _.each ["valid-ssl", "self-signed-ssl"], (mode)->
 
     it "should get access token", (done)->
       @oa.getAccessToken (error, response, body)->
+        # as jasmine does not stop on the first failing expectation, we use an if here to distingush good and bad case
         if error
+          # We don't want any error!
           expect(error).toBeUndefined()
+          # This allows us to check the error case when we eg. use a wrong oauth host name
         else
           data = JSON.parse(body)
           expect(data.access_token).toBeDefined()
