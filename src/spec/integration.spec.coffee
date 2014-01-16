@@ -31,8 +31,11 @@ _.each ["valid-ssl", "self-signed-ssl"], (mode)->
 
     it "should get access token", (done)->
       @oa.getAccessToken (error, response, body)->
-        data = JSON.parse(body)
-        expect(data.access_token).toBeDefined()
+        if error
+          expect(error).toBeUndefined()
+        else
+          data = JSON.parse(body)
+          expect(data.access_token).toBeDefined()
         done()
 
     it "should get products", (done)->
