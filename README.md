@@ -144,6 +144,9 @@ grunt release:minor // minor release
 grunt release:major // major release
 ```
 
+## Styleguide
+We <3 CoffeeScript! So please have a look at this referenced [coffeescript styleguide](https://github.com/polarmobile/coffeescript-style-guide) when doing changes to the code.
+
 ## License
 Copyright (c) 2013 Nicola Molinari
 Licensed under the MIT license.
