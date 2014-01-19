@@ -1,6 +1,6 @@
-# sphere-node-connect 
+# sphere-node-connect
 
-[![Build Status](https://secure.travis-ci.org/emmenko/sphere-node-connect.png?branch=master)](http://travis-ci.org/emmenko/sphere-node-connect) [![NPM version](https://badge.fury.io/js/sphere-node-connect.png)](http://badge.fury.io/js/sphere-node-connect) [![Coverage Status](https://coveralls.io/repos/emmenko/sphere-node-connect/badge.png?branch=master)](https://coveralls.io/r/emmenko/sphere-node-connect?branch=master) [![Dependency Status](https://gemnasium.com/emmenko/sphere-node-connect.png)](https://gemnasium.com/emmenko/sphere-node-connect)
+[![Build Status](https://secure.travis-ci.org/emmenko/sphere-node-connect.png?branch=master)](http://travis-ci.org/emmenko/sphere-node-connect) [![NPM version](https://badge.fury.io/js/sphere-node-connect.png)](http://badge.fury.io/js/sphere-node-connect) [![Coverage Status](https://coveralls.io/repos/emmenko/sphere-node-connect/badge.png?branch=master)](https://coveralls.io/r/emmenko/sphere-node-connect?branch=master) [![Dependency Status](https://david-dm.org/emmenko/sphere-node-connect.png?theme=shields.io)](https://david-dm.org/emmenko/sphere-node-connect) [![devDependency Status](https://david-dm.org/emmenko/sphere-node-connect/dev-status.png?theme=shields.io)](https://david-dm.org/emmenko/sphere-node-connect#info=devDependencies)
 
 Quick and easy way to connect your Node.js app with [SPHERE.IO](http://sphere.io).
 
@@ -46,7 +46,7 @@ var rest = new Rest({
   access_token: "", // optional (if not provided it will automatically retrieve an access_token)
   timeout: 20000, // optional
   rejectUnauthorized: true, // optional
-  oauth_host: "auth.sphere.io" // optional (used when retrieving the access_token internally) 
+  oauth_host: "auth.sphere.io" // optional (used when retrieving the access_token internally)
   user_agent: 'my client v0.1' // optional
 });
 
@@ -113,7 +113,7 @@ rest.DELETE("/product/abc?version=3", function(error, response, body) {
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
-Define your SPHERE.IO credentials into a `config.js`. Since the tests run against 2 projects on different environments you need to provide the credentials for both. If you just have one project You can provide the same credentials for both. 
+Define your SPHERE.IO credentials into a `config.js`. Since the tests run against 2 projects on different environments you need to provide the credentials for both. If you just have one project You can provide the same credentials for both.
 
 ```javascript
 /* SPHERE.IO credentials */
