@@ -59,6 +59,31 @@ The `Rest` object, when instantiated, has an internal instance of the `OAuth` mo
 Currently `GET`, `POST` and `DELETE` are supported.
 
 
+### Error handling
+Since the connector is basically a wrapper of the [`request`](https://github.com/mikeal/request#requestoptions-callback) HTTP Client, the `callback` function comes directly from there, meaning that the 3 arguments are the same:
+
+- `error`: an error object when applicable (usually from [`http.ClientRequest`](http://nodejs.org/api/http.html#http_class_http_clientrequest) object) otherwise `null`
+- `response`: an [`http.IncomingMessage`](http://nodejs.org/api/http.html#http_http_incomingmessage) object containing all kind of information about the request / response
+- `body`: a `String` or `Buffer` or JSON object if the `json` option is supplied
+
+As the SPHERE.IO [HTTP API](http://commercetools.de/dev/http-api.html) returns JSON responses either with resources or error messages, the application should check the response `statusCode` and decide what to do.
+It's always a good practice to check first for the existence of an `error` object in case there was a problem with the http client request.
+
+```javascript
+function(error, response, body) {
+  if (error) {
+    // do something
+  }
+
+  if (response.statusCode == 200) {
+    // ok
+  } else {
+    // do something else
+  }
+}
+```
+
+
 ## Examples
 ```javascript
 oa.getAccessToken(function(error, response, body){
