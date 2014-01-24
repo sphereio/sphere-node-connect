@@ -33,7 +33,6 @@
   },
   "scripts": {
     "build": "grunt build",
-    "prepublish": "grunt build",
     "postpublish": "rm -rf lib",
     "test": "grunt coverage"
   },
