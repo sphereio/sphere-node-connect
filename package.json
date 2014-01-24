@@ -27,11 +27,14 @@
       "url": "https://github.com/emmenko/sphere-node-connect/blob/master/LICENSE-MIT"
     }
   ],
-  "main": "main.js",
+  "main": "./lib",
   "engines": {
     "node": ">= 0.8.0"
   },
   "scripts": {
+    "build": "grunt build",
+    "prepublish": "grunt build",
+    "postpublish": "rm -rf lib",
     "test": "grunt coverage"
   },
   "dependencies": {
