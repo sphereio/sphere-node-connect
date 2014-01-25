@@ -1,5 +1,5 @@
 _ = require("underscore")._
-OAuth2 = require("../lib/oauth2").OAuth2
+OAuth2 = require("../lib/oauth2")
 Config = require('../config').config
 
 describe "OAuth2", ->

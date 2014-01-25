@@ -1,6 +1,6 @@
 _ = require("underscore")._
-OAuth2 = require("../lib/oauth2").OAuth2
-Rest = require("../lib/rest").Rest
+OAuth2 = require("../lib/oauth2")
+Rest = require("../lib/rest")
 Config = require('../config').config
 
 _.each ["valid-ssl", "self-signed-ssl"], (mode)->

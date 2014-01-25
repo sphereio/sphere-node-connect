@@ -1,5 +1,5 @@
 _ = require("underscore")._
-Rest = require("../lib/rest").Rest
+Rest = require("../lib/rest")
 Config = require('../config').config.prod
 
 describe "Rest", ->
@@ -63,27 +63,15 @@ describe "Rest", ->
       user_agent: "commercetools"
     expect(rest._options.headers["User-Agent"]).toBe "commercetools"
 
-describe "exports", ->
-
-  beforeEach ->
-    @lib = require("../lib/rest")
-
-  _.each ["doRequest"], (method)->
-    it "should call #{method}", ->
-      spyOn(@lib, "#{method}")
-      @lib[method]()
-      expect(@lib[method]).toHaveBeenCalled()
-
 describe "Rest requests", ->
 
   beforeEach ->
-    @lib = require("../lib/rest")
     opts =
       config: Config
       access_token: "foo"
     @rest = new Rest opts
 
-    spyOn(@lib, "doRequest").andCallFake((options, callback)-> callback(null, null, {id: "123"}))
+    spyOn(@rest, "_doRequest").andCallFake((options, callback)-> callback(null, null, {id: "123"}))
     spyOn(@rest._oauth, "getAccessToken").andCallFake((callback)-> callback(null, {statusCode: 200}, JSON.stringify(access_token: "foo")))
 
   afterEach ->
@@ -106,15 +94,16 @@ describe "Rest requests", ->
   it "should send GET request", (done)->
     prepareRequest done, (callMe, expected_options)=>
       @rest.GET("/product-projections", callMe)
-      expect(@lib.doRequest).toHaveBeenCalledWith(expected_options, jasmine.any(Function))
+      expect(@rest._doRequest).toHaveBeenCalledWith(expected_options, jasmine.any(Function))
 
   it "should send GET request with OAuth", (done)->
     rest = new Rest config: Config
     spyOn(rest._oauth, "getAccessToken").andCallFake((callback)-> callback(null, {statusCode: 200}, JSON.stringify(access_token: "foo")))
+    spyOn(rest, "_doRequest").andCallFake((options, callback)-> callback(null, null, {id: "123"}))
     prepareRequest done, (callMe, expected_options)=>
       rest.GET("/product-projections", callMe)
       expect(rest._oauth.getAccessToken).toHaveBeenCalledWith(jasmine.any(Function))
-      expect(@lib.doRequest).toHaveBeenCalledWith(expected_options, jasmine.any(Function))
+      expect(rest._doRequest).toHaveBeenCalledWith(expected_options, jasmine.any(Function))
 
   it "should send POST request", (done)->
     prepareRequest done, (callMe, expected_options)=>
@@ -123,11 +112,12 @@ describe "Rest requests", ->
         uri: "https://api.sphere.io/#{Config.project_key}/products"
         method: "POST"
         body: {name: "Foo"}
-      expect(@lib.doRequest).toHaveBeenCalledWith(expected_options, jasmine.any(Function))
+      expect(@rest._doRequest).toHaveBeenCalledWith(expected_options, jasmine.any(Function))
 
   it "should send POST request with OAuth", (done)->
     rest = new Rest config: Config
     spyOn(rest._oauth, "getAccessToken").andCallFake((callback)-> callback(null, {statusCode: 200}, JSON.stringify(access_token: "foo")))
+    spyOn(rest, "_doRequest").andCallFake((options, callback)-> callback(null, null, {id: "123"}))
     prepareRequest done, (callMe, expected_options)=>
       rest.POST("/products", {name: "Foo"}, callMe)
       _.extend expected_options,
@@ -135,12 +125,12 @@ describe "Rest requests", ->
         method: "POST"
         body: {name: "Foo"}
       expect(rest._oauth.getAccessToken).toHaveBeenCalledWith(jasmine.any(Function))
-      expect(@lib.doRequest).toHaveBeenCalledWith(expected_options, jasmine.any(Function))
+      expect(rest._doRequest).toHaveBeenCalledWith(expected_options, jasmine.any(Function))
 
   it "should fail to getting an access_token after 10 attempts", ->
     rest = new Rest config: Config
     spyOn(rest._oauth, "getAccessToken").andCallFake((callback)-> callback(null, {statusCode: 401}, null))
-    req = -> rest.preRequest(rest._oauth, {}, {}, ->)
+    req = -> rest._preRequest(rest._oauth, {}, {}, ->)
     expect(req).toThrow new Error "Could not retrieve access_token after 10 attempts.\n" +
       "Status code: 401\n" +
       "Body: null\n"
@@ -148,6 +138,10 @@ describe "Rest requests", ->
   it "should fail on error", ->
     rest = new Rest config: Config
     spyOn(rest._oauth, "getAccessToken").andCallFake((callback)-> callback("Connection read timeout", null, null))
-    req = -> rest.preRequest(rest._oauth, {}, {}, ->)
+    req = -> rest._preRequest(rest._oauth, {}, {}, ->)
     expect(req).toThrow new Error "Error on retrieving access_token after 10 attempts.\n" +
       "Error: Connection read timeout\n"
+
+  it "should throw error for unimplented PUT request", ->
+    rest = new Rest config: Config
+    expect(rest.PUT).toThrow new Error "Not implemented yet"
