@@ -27,7 +27,7 @@
       "url": "https://github.com/emmenko/sphere-node-connect/blob/master/LICENSE-MIT"
     }
   ],
-  "main": "./lib",
+  "main": "./lib/main",
   "engines": {
     "node": ">= 0.8.0"
   },
