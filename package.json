@@ -37,7 +37,6 @@
     "test": "grunt coverage"
   },
   "dependencies": {
-    "randomstring": "~1.0.x",
     "request": "~2.33.0",
     "underscore": "~1.5.2"
   },
