@@ -12,6 +12,7 @@ describe "OAuth2", ->
     expect(oa._options.accessTokenUrl).toBe "/oauth/token"
     expect(oa._options.timeout).toBe 20000
     expect(oa._options.rejectUnauthorized).toBe true
+    expect(oa._options.debug).toBe false
 
   it "should throw error if no credentials are given", ->
     oa = -> new OAuth2
@@ -47,3 +48,9 @@ describe "OAuth2", ->
       config: Config.prod
       rejectUnauthorized: false
     expect(oa._options.rejectUnauthorized).toBe false
+
+  it "should pass 'debug' option", ->
+    oa = new OAuth2
+      config: Config.prod
+      debug: true
+    expect(oa._options.debug).toBe true

@@ -1,4 +1,5 @@
 _ = require("underscore")._
+colors = require('colors')
 querystring = require('querystring')
 request = require('request')
 
@@ -18,6 +19,7 @@ class OAuth2
       accessTokenUrl: opts.accessTokenUrl or "/oauth/token"
       timeout: opts.timeout or 20000
       rejectUnauthorized: rejectUnauthorized
+      debug: opts.debug or false
     return
 
   getAccessToken: (callback)->
@@ -36,7 +38,17 @@ class OAuth2
       timeout: @_options.timeout
       rejectUnauthorized: @_options.rejectUnauthorized
 
-    request request_options, callback
+    if @_options.debug
+      console.log 'DEBUG Auth request:'.blue
+      console.log JSON.stringify(request_options, null, 4).cyan
+
+    request request_options, (e, r, b)=>
+      if @_options.debug
+        console.log 'DEBUG Auth response:'.blue
+        console.log e.yellow if e
+        console.log b.cyan if b
+      callback(e, r, b)
+
 
 ###
 Exports object
