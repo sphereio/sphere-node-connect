@@ -100,7 +100,7 @@ describe "Rest requests", ->
     rest = new Rest config: Config
     spyOn(rest._oauth, "getAccessToken").andCallFake((callback)-> callback(null, {statusCode: 200}, JSON.stringify(access_token: "foo")))
     spyOn(rest, "_doRequest").andCallFake((options, callback)-> callback(null, null, {id: "123"}))
-    prepareRequest done, (callMe, expected_options)=>
+    prepareRequest done, (callMe, expected_options)->
       rest.GET("/product-projections", callMe)
       expect(rest._oauth.getAccessToken).toHaveBeenCalledWith(jasmine.any(Function))
       expect(rest._doRequest).toHaveBeenCalledWith(expected_options, jasmine.any(Function))
@@ -118,7 +118,7 @@ describe "Rest requests", ->
     rest = new Rest config: Config
     spyOn(rest._oauth, "getAccessToken").andCallFake((callback)-> callback(null, {statusCode: 200}, JSON.stringify(access_token: "foo")))
     spyOn(rest, "_doRequest").andCallFake((options, callback)-> callback(null, null, {id: "123"}))
-    prepareRequest done, (callMe, expected_options)=>
+    prepareRequest done, (callMe, expected_options)->
       rest.POST("/products", {name: "Foo"}, callMe)
       _.extend expected_options,
         uri: "https://api.sphere.io/#{Config.project_key}/products"
