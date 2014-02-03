@@ -14,7 +14,6 @@ describe "Rest", ->
     expect(rest._options.uri).toBe "https://api.sphere.io/#{Config.project_key}"
     expect(rest._options.timeout).toBe 20000
     expect(rest._options.rejectUnauthorized).toBe true
-    expect(rest._options.debug).toBe false
     expect(rest._options.headers["User-Agent"]).toBe "sphere-node-connect"
 
   it "should throw error if no credentials are given", ->
@@ -63,12 +62,6 @@ describe "Rest", ->
       config: Config
       user_agent: "commercetools"
     expect(rest._options.headers["User-Agent"]).toBe "commercetools"
-
-  it "should pass 'debug' option", ->
-    rest = new Rest
-      config: Config
-      debug: true
-    expect(rest._options.debug).toBe true
 
 describe "Rest requests", ->
 

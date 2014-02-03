@@ -1,5 +1,4 @@
 _ = require("underscore")._
-colors = require('colors')
 request = require("request")
 OAuth2 = require("./oauth2")
 
@@ -20,7 +19,6 @@ class Rest
       access_token: opts.access_token or undefined
       timeout: opts.timeout or 20000
       rejectUnauthorized: rejectUnauthorized
-      debug: opts.debug or false
       headers:
         'User-Agent': userAgent
     @_options.uri = "https://#{@_options.host}/#{@_options.config.project_key}"
@@ -95,17 +93,7 @@ class Rest
 
     _req(0)
 
-  _doRequest: (options, callback)->
-    if @_options.debug
-      console.log 'DEBUG Rest request:'.blue
-      console.log JSON.stringify(options).cyan
-
-    request options, (e, r, b)=>
-      if @_options.debug
-        console.log 'DEBUG Rest response:'.blue
-        console.log e.yellow if e
-        console.log b.cyan if b
-      callback(e, r, b)
+  _doRequest: (options, callback)-> request options, callback
 
 ###
 Exports object
