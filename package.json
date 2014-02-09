@@ -38,7 +38,8 @@
   },
   "dependencies": {
     "request": "~2.33.0",
-    "underscore": "~1.5.2"
+    "underscore": "~1.5.2",
+    "npmlog": "~0.0.6"
   },
   "devDependencies": {
     "coveralls": "~2.7.0",
