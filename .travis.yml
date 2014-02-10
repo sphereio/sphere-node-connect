@@ -21,3 +21,6 @@ notifications:
     format: html
     on_success: change
     on_failure: always
+branches:
+  only:
+    - master
