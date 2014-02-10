@@ -1,6 +1,7 @@
 _ = require("underscore")._
 request = require("request")
 OAuth2 = require("./oauth2")
+debug = require('./debug')
 
 class Rest
 
@@ -19,6 +20,7 @@ class Rest
       access_token: opts.access_token or undefined
       timeout: opts.timeout or 20000
       rejectUnauthorized: rejectUnauthorized
+      verbose: opts.verbose or false
       headers:
         'User-Agent': userAgent
     @_options.uri = "https://#{@_options.host}/#{@_options.config.project_key}"
@@ -93,7 +95,10 @@ class Rest
 
     _req(0)
 
-  _doRequest: (options, callback)-> request options, callback
+  _doRequest: (options, callback)->
+    request options, (e, r, b)=>
+      debug.http(@_options.verbose, r)
+      callback(e, r, b)
 
 ###
 Exports object

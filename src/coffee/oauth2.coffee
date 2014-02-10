@@ -1,6 +1,7 @@
 _ = require("underscore")._
 querystring = require('querystring')
 request = require('request')
+debug = require('./debug')
 
 class OAuth2
 
@@ -18,6 +19,7 @@ class OAuth2
       accessTokenUrl: opts.accessTokenUrl or "/oauth/token"
       timeout: opts.timeout or 20000
       rejectUnauthorized: rejectUnauthorized
+      verbose: opts.verbose or false
     return
 
   getAccessToken: (callback)->
@@ -37,7 +39,12 @@ class OAuth2
       timeout: @_options.timeout
       rejectUnauthorized: @_options.rejectUnauthorized
 
-    request request_options, callback
+    @_doRequest request_options, callback
+
+  _doRequest: (options, callback)->
+    request options, (e, r, b)=>
+      debug.http(@_options.verbose, r)
+      callback(e, r, b)
 
 ###
 Exports object

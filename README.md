@@ -29,6 +29,7 @@ var oa = new OAuth2({
   accessTokenUrl: "/oauth/token" // optional,
   timeout: 20000, // optional
   rejectUnauthorized: true // optional
+  verbose: false // optional (will print debug information)
 });
 oa.getAccessToken(callback)
 ```
@@ -48,6 +49,7 @@ var rest = new Rest({
   rejectUnauthorized: true, // optional
   oauth_host: "auth.sphere.io" // optional (used when retrieving the access_token internally)
   user_agent: 'my client v0.1' // optional
+  verbose: false // optional (will print debug information)
 });
 
 rest.GET(resource, callback)

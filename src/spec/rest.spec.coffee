@@ -15,6 +15,7 @@ describe "Rest", ->
     expect(rest._options.timeout).toBe 20000
     expect(rest._options.rejectUnauthorized).toBe true
     expect(rest._options.headers["User-Agent"]).toBe "sphere-node-connect"
+    expect(rest._options.verbose).toBe false
 
   it "should throw error if no credentials are given", ->
     rest = -> new Rest
@@ -62,6 +63,12 @@ describe "Rest", ->
       config: Config
       user_agent: "commercetools"
     expect(rest._options.headers["User-Agent"]).toBe "commercetools"
+
+  it "should pass 'verbose' option", ->
+    rest = new Rest
+      config: Config
+      verbose: true
+    expect(rest._options.verbose).toBe true
 
 describe "Rest requests", ->
 
