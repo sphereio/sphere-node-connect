@@ -28,6 +28,7 @@ class OAuth2
     payload = querystring.stringify(params)
     request_options =
       uri: "https://#{@_options.config.client_id}:#{@_options.config.client_secret}@#{@_options.host}#{@_options.accessTokenUrl}"
+      json: true
       method: "POST"
       body: payload
       headers:

@@ -72,8 +72,7 @@ class Rest
             else
               _req(retry + 1)
           else
-            data = JSON.parse(body)
-            access_token = data.access_token
+            access_token = body.access_token
             @_options.access_token = access_token
             @_options.headers["Authorization"] = "Bearer #{@_options.access_token}"
             # call itself again (this time with the access_token)
@@ -81,6 +80,7 @@ class Rest
       else
         request_options =
           uri: "#{@_options.uri}#{params.resource}"
+          json: true
           method: params.method
           headers: @_options.headers
           timeout: @_options.timeout

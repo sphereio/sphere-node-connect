@@ -72,7 +72,7 @@ describe "Rest requests", ->
     @rest = new Rest opts
 
     spyOn(@rest, "_doRequest").andCallFake((options, callback)-> callback(null, null, {id: "123"}))
-    spyOn(@rest._oauth, "getAccessToken").andCallFake((callback)-> callback(null, {statusCode: 200}, JSON.stringify(access_token: "foo")))
+    spyOn(@rest._oauth, "getAccessToken").andCallFake((callback)-> callback(null, {statusCode: 200}, {access_token: "foo"}))
 
   afterEach ->
     @rest = null
@@ -83,6 +83,7 @@ describe "Rest requests", ->
       done()
     expected_options =
       uri: "https://api.sphere.io/#{Config.project_key}/product-projections"
+      json: true
       method: "GET"
       headers:
         "User-Agent": "sphere-node-connect"
@@ -98,7 +99,7 @@ describe "Rest requests", ->
 
   it "should send GET request with OAuth", (done)->
     rest = new Rest config: Config
-    spyOn(rest._oauth, "getAccessToken").andCallFake((callback)-> callback(null, {statusCode: 200}, JSON.stringify(access_token: "foo")))
+    spyOn(rest._oauth, "getAccessToken").andCallFake((callback)-> callback(null, {statusCode: 200}, {access_token: "foo"}))
     spyOn(rest, "_doRequest").andCallFake((options, callback)-> callback(null, null, {id: "123"}))
     prepareRequest done, (callMe, expected_options)->
       rest.GET("/product-projections", callMe)
@@ -116,7 +117,7 @@ describe "Rest requests", ->
 
   it "should send POST request with OAuth", (done)->
     rest = new Rest config: Config
-    spyOn(rest._oauth, "getAccessToken").andCallFake((callback)-> callback(null, {statusCode: 200}, JSON.stringify(access_token: "foo")))
+    spyOn(rest._oauth, "getAccessToken").andCallFake((callback)-> callback(null, {statusCode: 200}, {access_token: "foo"}))
     spyOn(rest, "_doRequest").andCallFake((options, callback)-> callback(null, null, {id: "123"}))
     prepareRequest done, (callMe, expected_options)->
       rest.POST("/products", {name: "Foo"}, callMe)

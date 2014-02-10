@@ -37,16 +37,14 @@ _.each ["valid-ssl", "self-signed-ssl"], (mode)->
           expect(error).toBeUndefined()
           # This allows us to check the error case when we eg. use a wrong oauth host name
         else
-          data = JSON.parse(body)
-          expect(data.access_token).toBeDefined()
+          expect(body.access_token).toBeDefined()
         done()
 
     it "should get products", (done)->
       @rest.GET "/products", (error, response, body)->
         expect(response.statusCode).toBe 200
-        json = JSON.parse(body)
-        expect(json).toBeDefined()
-        results = json.results
+        expect(body).toBeDefined()
+        results = body.results
         expect(results.length).toBeGreaterThan 0
         expect(results[0].id).toEqual jasmine.any(String)
         done()

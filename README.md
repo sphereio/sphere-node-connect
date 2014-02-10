@@ -64,7 +64,7 @@ Since the connector is basically a wrapper of the [`request`](https://github.com
 
 - `error`: an error object when applicable (usually from [`http.ClientRequest`](http://nodejs.org/api/http.html#http_class_http_clientrequest) object) otherwise `null`
 - `response`: an [`http.IncomingMessage`](http://nodejs.org/api/http.html#http_http_incomingmessage) object containing all kind of information about the request / response
-- `body`: a `String` or `Buffer` or JSON object if the `json` option is supplied
+- `body`: a JSON object (automatically parsed)
 
 As the SPHERE.IO [HTTP API](http://commercetools.de/dev/http-api.html) returns JSON responses either with resources or [error messages](http://commercetools.de/dev/http-api-projects-errors.html), the application should check the response `statusCode` and decide what to do.
 It's always a good practice to check first for the existence of an `error` object in case there was a problem with the http client request.
@@ -88,8 +88,7 @@ function(error, response, body) {
 ```javascript
 oa.getAccessToken(function(error, response, body){
   if (response.statusCode is 200) {
-    var data = JSON.parse(body);
-    var access_token = data.access_token;
+    var access_token = body.access_token;
   } else
     throw new Error("Failed to get Access Token.")
 })
@@ -98,8 +97,7 @@ oa.getAccessToken(function(error, response, body){
 ```javascript
 // Get a list of all products
 rest.GET("/products", function(error, response, body){
-  var data = JSON.parse(body);
-  console.log(data);
+  console.log(body);
 });
 
 // Create a new product
@@ -108,8 +106,7 @@ rest.POST("/products", {
   slug: { en: "foo" },
   productType: { id: "123", typeId: "product-type" }
 }, function(error, response, body){
-  var data = JSON.parse(body);
-  console.log(data);
+  console.log(body);
 });
 
 // Update a product
@@ -119,8 +116,7 @@ rest.POST("/products/123", {
     { action: "changeName", name: { en: "Boo" } }
   ]
 }, function(error, response, body){
-  var data = JSON.parse(body);
-  console.log(data);
+  console.log(body);
 });
 
 // Delete a product
