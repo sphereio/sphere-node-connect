@@ -1,9 +1,10 @@
-Rest = require('../lib/main').Rest
-OAuth2 = require('../lib/main').OAuth2
+{ Rest } = require '../lib/main'
+{ OAuth2 } = require '../lib/main'
 
-describe "exports", ->
-  it "Rest", ->
+describe 'exports', ->
+
+  it 'Rest', ->
     expect(Rest).toBeDefined()
 
-  it "OAuth2", ->
+  it 'OAuth2', ->
     expect(OAuth2).toBeDefined()

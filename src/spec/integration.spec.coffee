@@ -1,10 +1,10 @@
-_ = require("underscore")._
-OAuth2 = require("../lib/oauth2")
-Rest = require("../lib/rest")
+_ = require('underscore')._
 Config = require('../config').config
+OAuth2 = require '../lib/oauth2'
+Rest = require '../lib/rest'
 
-_.each ["valid-ssl", "self-signed-ssl"], (mode)->
-  isSelfSigned = mode is "self-signed-ssl"
+_.each ['valid-ssl', 'self-signed-ssl'], (mode) ->
+  isSelfSigned = mode is 'self-signed-ssl'
 
   describe "Integration test (#{mode})", ->
 
@@ -29,8 +29,8 @@ _.each ["valid-ssl", "self-signed-ssl"], (mode)->
       @oa = null
       @rest = null
 
-    it "should get access token", (done)->
-      @oa.getAccessToken (error, response, body)->
+    it 'should get access token', (done) ->
+      @oa.getAccessToken (error, response, body) ->
         # as jasmine does not stop on the first failing expectation, we use an if here to distingush good and bad case
         if error
           # We don't want any error!
@@ -40,8 +40,8 @@ _.each ["valid-ssl", "self-signed-ssl"], (mode)->
           expect(body.access_token).toBeDefined()
         done()
 
-    it "should get products", (done)->
-      @rest.GET "/products", (error, response, body)->
+    it 'should get products', (done) ->
+      @rest.GET '/products', (error, response, body) ->
         expect(response.statusCode).toBe 200
         expect(body).toBeDefined()
         results = body.results
@@ -49,19 +49,19 @@ _.each ["valid-ssl", "self-signed-ssl"], (mode)->
         expect(results[0].id).toEqual jasmine.any(String)
         done()
 
-    it "should return 404 if product is not found", (done)->
-      @rest.GET "/products/123", (error, response, body)->
+    it 'should return 404 if product is not found', (done) ->
+      @rest.GET '/products/123', (error, response, body) ->
         expect(response.statusCode).toBe 404
         done()
 
-    it "should create an delete custom object", (done)->
+    it 'should create an delete custom object', (done) ->
       data =
-        container: "integration"
-        key: "foo"
-        value: "bar"
+        container: 'integration'
+        key: 'foo'
+        value: 'bar'
       payload = JSON.stringify(data)
-      @rest.POST "/custom-objects", payload, (error, response, body)=>
+      @rest.POST '/custom-objects', payload, (error, response, body) =>
         expect(response.statusCode).toBe 201
-        @rest.DELETE "/custom-objects/integration/foo", (error, response, body)->
+        @rest.DELETE '/custom-objects/integration/foo', (error, response, body) ->
           expect(response.statusCode).toBe 200
           done()
