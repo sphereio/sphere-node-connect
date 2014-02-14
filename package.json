@@ -38,10 +38,10 @@
   },
   "dependencies": {
     "request": "~2.33.0",
-    "underscore": "~1.5.2"
+    "underscore": "~1.6.0"
   },
   "devDependencies": {
-    "coveralls": "~2.7.0",
+    "coveralls": "~2.8.0",
     "grunt": "~0.4.2",
     "grunt-bump": "~0.0.13",
     "grunt-coffeelint": "~0.0.8",
