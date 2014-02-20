@@ -70,6 +70,8 @@ describe 'Rest requests', ->
       config: Config
       access_token: 'foo'
     @rest = new Rest opts
+    @rest.logger.info = -> # don't print to console
+    @rest._oauth.logger.info = -> # don't print to console
 
     spyOn(@rest, '_doRequest').andCallFake (options, callback) -> callback(null, null, {id: '123'})
     spyOn(@rest._oauth, 'getAccessToken').andCallFake (callback) -> callback(null, {statusCode: 200}, {access_token: 'foo'})
@@ -99,6 +101,8 @@ describe 'Rest requests', ->
 
   it 'should send GET request with OAuth', (done) ->
     rest = new Rest config: Config
+    rest.logger.info = -> # don't print to console
+    rest._oauth.logger.info = -> # don't print to console
     spyOn(rest._oauth, 'getAccessToken').andCallFake (callback) -> callback(null, {statusCode: 200}, {access_token: 'foo'})
     spyOn(rest, '_doRequest').andCallFake (options, callback) -> callback(null, null, {id: '123'})
     prepareRequest done, (callMe, expected_options) ->
@@ -117,6 +121,8 @@ describe 'Rest requests', ->
 
   it 'should send POST request with OAuth', (done) ->
     rest = new Rest config: Config
+    rest.logger.info = -> # don't print to console
+    rest._oauth.logger.info = -> # don't print to console
     spyOn(rest._oauth, 'getAccessToken').andCallFake (callback) -> callback(null, {statusCode: 200}, {access_token: 'foo'})
     spyOn(rest, '_doRequest').andCallFake (options, callback) -> callback(null, null, {id: '123'})
     prepareRequest done, (callMe, expected_options) ->
@@ -130,6 +136,8 @@ describe 'Rest requests', ->
 
   it 'should fail to getting an access_token after 10 attempts', ->
     rest = new Rest config: Config
+    rest.logger.info = -> # don't print to console
+    rest._oauth.logger.info = -> # don't print to console
     spyOn(rest._oauth, 'getAccessToken').andCallFake (callback) -> callback(null, {statusCode: 401}, null)
     req = -> rest._preRequest(rest._oauth, {}, {}, -> )
     expect(req).toThrow new Error 'Could not retrieve access_token after 10 attempts.\n' +
@@ -138,6 +146,8 @@ describe 'Rest requests', ->
 
   it 'should fail on error', ->
     rest = new Rest config: Config
+    rest.logger.info = -> # don't print to console
+    rest._oauth.logger.info = -> # don't print to console
     spyOn(rest._oauth, 'getAccessToken').andCallFake (callback) -> callback('Connection read timeout', null, null)
     req = -> rest._preRequest(rest._oauth, {}, {}, -> )
     expect(req).toThrow new Error 'Error on retrieving access_token after 10 attempts.\n' +
@@ -145,4 +155,5 @@ describe 'Rest requests', ->
 
   it 'should throw error for unimplented PUT request', ->
     rest = new Rest config: Config
-    expect(rest.PUT).toThrow new Error 'Not implemented yet'
+    rest.logger.info = -> # don't print to console
+    expect(-> rest.PUT()).toThrow new Error 'Not implemented yet'

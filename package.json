@@ -37,6 +37,7 @@
     "test": "grunt coverage"
   },
   "dependencies": {
+    "bunyan": "~0.22.1",
     "request": "~2.33.0",
     "underscore": "~1.6.0"
   },

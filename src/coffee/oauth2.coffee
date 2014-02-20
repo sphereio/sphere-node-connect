@@ -1,6 +1,7 @@
 _ = require('underscore')._
 querystring = require 'querystring'
 request = require 'request'
+logger = require './logger'
 
 class OAuth2
 
@@ -11,6 +12,8 @@ class OAuth2
     throw new Error('Missing \'client_secret\'') unless config.client_secret
     throw new Error('Missing \'project_key\'') unless config.project_key
 
+    @logger = logger.init opts.logConfig
+
     rejectUnauthorized = if _.isUndefined(opts.rejectUnauthorized) then true else opts.rejectUnauthorized
     @_options =
       config: config
@@ -18,6 +21,8 @@ class OAuth2
       accessTokenUrl: opts.accessTokenUrl or '/oauth/token'
       timeout: opts.timeout or 20000
       rejectUnauthorized: rejectUnauthorized
+
+    @logger.debug @_options, 'OAuth constructor initialized.'
     return
 
   getAccessToken: (callback) ->
@@ -37,7 +42,14 @@ class OAuth2
       timeout: @_options.timeout
       rejectUnauthorized: @_options.rejectUnauthorized
 
-    request request_options, callback
+    @logger.info 'Retrieving access_token...'
+    @_doRequest(request_options, callback)
+
+  _doRequest: (options, callback) ->
+    request options, (e, r, b) =>
+      @logger.error e if e
+      @logger.debug request: r.request, response: r, 'OAuth response'
+      callback(e, r, b)
 
 ###
 Exports object
