@@ -23,8 +23,13 @@ Install the module with: `npm install sphere-node-connect`
 
 ```javascript
 var sphere_connect = require('sphere-node-connect');
+// handles OAuth2 request to retrieve an access_token
 var oa = sphere_connect.OAuth2;
+// handles requests to HTTP APIs
 var rest = sphere_connect.Rest;
+
+// instance of a Logger (useful to extend logging functionality from a parent module)
+var logger = sphere_connect.Logger
 ```
 
 ## Documentation

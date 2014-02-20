@@ -1,6 +1,6 @@
 _ = require('underscore')._
 request = require 'request'
-logger = require './logger'
+Logger = require './logger'
 OAuth2 = require './oauth2'
 
 class Rest
@@ -12,7 +12,7 @@ class Rest
     throw new Error('Missing \'client_secret\'') unless config.client_secret
     throw new Error('Missing \'project_key\'') unless config.project_key
 
-    @logger = logger.init opts.logConfig
+    @logger = new Logger opts.logConfig
 
     rejectUnauthorized = if _.isUndefined(opts.rejectUnauthorized) then true else opts.rejectUnauthorized
     userAgent = if _.isUndefined(opts.user_agent) then 'sphere-node-connect' else opts.user_agent

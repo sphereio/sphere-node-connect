@@ -1,9 +1,13 @@
-logger = require '../lib/logger'
+Logger = require '../lib/logger'
+
+class MyLogger extends Logger
+  @appName: 'foo'
+  @path: './foo-test.log'
 
 describe 'Logger', ->
 
   it 'should initialize with default options', ->
-    log = logger.init()
+    log = new Logger()
 
     expect(log.streams[0].type).toBe 'stream'
     expect(log.streams[0].level).toBe 30 # info
@@ -16,7 +20,7 @@ describe 'Logger', ->
     expect(log.src).toBe false
 
   it 'should initialize with custom options', ->
-    log = logger.init
+    log = new Logger
       levelStream: 'error'
       levelFile: 'trace'
       path: './another-path.log'
@@ -34,8 +38,9 @@ describe 'Logger', ->
     expect(log.src).toBe true
 
   it 'should use given logger', ->
-    existingLogger = logger.init name: 'foo'
-    log = logger.init logger: existingLogger
+    existingLogger = new MyLogger()
+    log = new Logger logger: existingLogger
 
     expect(log.fields.name).toBe 'foo'
+    expect(log.streams[1].path).toBe './foo-test.log'
     expect(log.fields.widget_type).toBe 'sphere-node-connect'

@@ -1,7 +1,7 @@
 _ = require('underscore')._
 querystring = require 'querystring'
 request = require 'request'
-logger = require './logger'
+Logger = require './logger'
 
 class OAuth2
 
@@ -12,7 +12,7 @@ class OAuth2
     throw new Error('Missing \'client_secret\'') unless config.client_secret
     throw new Error('Missing \'project_key\'') unless config.project_key
 
-    @logger = logger.init opts.logConfig
+    @logger = new Logger opts.logConfig
 
     rejectUnauthorized = if _.isUndefined(opts.rejectUnauthorized) then true else opts.rejectUnauthorized
     @_options =

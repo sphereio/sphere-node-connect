@@ -34,13 +34,13 @@ module.exports = class
    * @param  {Object} [config] The configuration for the logger
    * @return {Object} A {Bunyan} logger
   ###
-  @init: (config = {}) =>
+  constructor: (config = {}) ->
 
     {levelStream, levelFile, path, logger, name, serializers, src, streams} = _.defaults config,
-      levelStream: @levelStream
-      levelFile: @levelFile
-      path: @path
-      name: @appName
+      levelStream: @constructor.levelStream
+      levelFile: @constructor.levelFile
+      path: @constructor.path
+      name: @constructor.appName
       serializers: _.extend bunyan.stdSerializers,
         request: @reqSerializer
         response: @resSerializer
@@ -48,7 +48,7 @@ module.exports = class
       streams: []
 
     if logger
-      logger = logger.child widget_type: @appName
+      logger = logger.child widget_type: @constructor.appName
     else
       logger = bunyan.createLogger
         name: name
@@ -59,15 +59,15 @@ module.exports = class
           {level: levelFile, path: path}
         ]
 
-    logger
+    return logger
 
-  @reqSerializer: (req) ->
+  reqSerializer: (req) ->
     type: 'REQUEST'
     uri: req.uri
     method: req.method
     headers: req.headers
 
-  @resSerializer: (res) ->
+  resSerializer: (res) ->
     type: 'RESPONSE'
     status: res.statusCode
     headers: res.headers
