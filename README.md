@@ -122,6 +122,10 @@ logConfig: {
     response: resSerializer // function that maps the response object with fields (status, headers, body)
   src: false // includes a log of the call source location (file, line, function).
              // Determining the source call is slow, therefor it's recommended not to enable this on production.
+  streams: [ // a list of streams that defines the type of output for log messages
+    {level: 'info', stream: process.stdout}
+    {level: 'debug', path: './sphere-node-connect-debug.log'}
+  ]
 }
 ```
 
