@@ -137,6 +137,7 @@ describe 'Rest requests', ->
   it 'should fail to getting an access_token after 10 attempts', ->
     rest = new Rest config: Config
     rest.logger.info = -> # don't print to console
+    rest.logger.warn = -> # don't print to console
     rest._oauth.logger.info = -> # don't print to console
     spyOn(rest._oauth, 'getAccessToken').andCallFake (callback) -> callback(null, {statusCode: 401}, null)
     req = -> rest._preRequest(rest._oauth, {}, {}, -> )
@@ -147,6 +148,7 @@ describe 'Rest requests', ->
   it 'should fail on error', ->
     rest = new Rest config: Config
     rest.logger.info = -> # don't print to console
+    rest.logger.warn = -> # don't print to console
     rest._oauth.logger.info = -> # don't print to console
     spyOn(rest._oauth, 'getAccessToken').andCallFake (callback) -> callback('Connection read timeout', null, null)
     req = -> rest._preRequest(rest._oauth, {}, {}, -> )
@@ -155,5 +157,5 @@ describe 'Rest requests', ->
 
   it 'should throw error for unimplented PUT request', ->
     rest = new Rest config: Config
-    rest.logger.info = -> # don't print to console
+    rest.logger.warn = -> # don't print to console
     expect(-> rest.PUT()).toThrow new Error 'Not implemented yet'
