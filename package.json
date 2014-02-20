@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "bunyan": "~0.22.1",
-    "request": "~2.33.0",
+    "request": "~2.34.0",
     "underscore": "~1.6.0"
   },
   "devDependencies": {
@@ -47,7 +47,7 @@
     "grunt-bump": "~0.0.13",
     "grunt-coffeelint": "~0.0.8",
     "grunt-contrib-clean": "~0.5.0",
-    "grunt-contrib-coffee": "~0.10.0",
+    "grunt-contrib-coffee": "~0.10.1",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-shell": "~0.6.4",
