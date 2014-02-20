@@ -24,6 +24,10 @@ _.each ['valid-ssl', 'self-signed-ssl'], (mode) ->
           config: Config.prod
         @rest = new Rest
           config: Config.prod
+      @rest.logger.info = -> # don't print to console
+      @rest.logger.warn = -> # don't print to console
+      @rest._oauth.logger.info = -> # don't print to console
+      @oa.logger.info = -> # don't print to console
 
     afterEach ->
       @oa = null
