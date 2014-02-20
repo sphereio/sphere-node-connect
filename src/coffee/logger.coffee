@@ -7,7 +7,8 @@ module.exports = class
    * https://www.npmjs.org/package/bunyan
    *
    * Initialize the logger with following options:
-   * - level: log level 'trace | debug | info | warn | error | fatal' (default 'info')
+   * - levelStream: log level for stdout stream 'trace | debug | info | warn | error | fatal' (default 'info')
+   * - levelFile: log level for file stream 'trace | debug | info | warn | error | fatal' (default 'debug')
    * - path: the file path where to write the stream (default './log')
    * - logger: a {Bunyan} logger to use instead of creating a new one (usually used from a parent module)
    * - name: the name of the app

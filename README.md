@@ -2,7 +2,21 @@
 
 [![Build Status](https://secure.travis-ci.org/emmenko/sphere-node-connect.png?branch=master)](http://travis-ci.org/emmenko/sphere-node-connect) [![NPM version](https://badge.fury.io/js/sphere-node-connect.png)](http://badge.fury.io/js/sphere-node-connect) [![Coverage Status](https://coveralls.io/repos/emmenko/sphere-node-connect/badge.png?branch=master)](https://coveralls.io/r/emmenko/sphere-node-connect?branch=master) [![Dependency Status](https://david-dm.org/emmenko/sphere-node-connect.png?theme=shields.io)](https://david-dm.org/emmenko/sphere-node-connect) [![devDependency Status](https://david-dm.org/emmenko/sphere-node-connect/dev-status.png?theme=shields.io)](https://david-dm.org/emmenko/sphere-node-connect#info=devDependencies)
 
-Quick and easy way to connect your Node.js app with [SPHERE.IO](http://sphere.io).
+Quick and easy way to connect your Node.js app with [SPHERE.IO](http://sphere.io) HTTP APIs.
+
+## Table of Contents
+* [Getting Started](#getting-started)
+* [Documentation](#documentation)
+  * [OAuth2](#oauth2)
+  * [Rest](#rest)
+  * [Error handling](#error-handling)
+  * [Logging](#logging)
+* [Examples](#examples)
+* [Contributing](#contributing)
+* [Releasing](#releasing)
+* [Styleguide](#styleguide)
+* [License](#license)
+
 
 ## Getting Started
 Install the module with: `npm install sphere-node-connect`
@@ -16,6 +30,8 @@ var rest = sphere_connect.Rest;
 ## Documentation
 The connector exposes 2 objects: `OAuth2` and `Rest`.
 
+### OAuth2
+
 The `OAuth2` is used to retrieve an `access_token`
 
 ```javascript
@@ -28,10 +44,13 @@ var oa = new OAuth2({
   host: "auth.sphere.io", // optional
   accessTokenUrl: "/oauth/token" // optional,
   timeout: 20000, // optional
-  rejectUnauthorized: true // optional
+  rejectUnauthorized: true, // optional
+  logConfig: {} // optional (see `Logging` section)
 });
 oa.getAccessToken(callback)
 ```
+
+### Rest
 
 The `Rest` is used to comunicate with the HTTP API.
 
@@ -46,15 +65,16 @@ var rest = new Rest({
   access_token: "", // optional (if not provided it will automatically retrieve an access_token)
   timeout: 20000, // optional
   rejectUnauthorized: true, // optional
-  oauth_host: "auth.sphere.io" // optional (used when retrieving the access_token internally)
-  user_agent: 'my client v0.1' // optional
+  oauth_host: "auth.sphere.io", // optional (used when retrieving the access_token internally)
+  user_agent: 'my client v0.1', // optional
+  logConfig: {} // optional (see `Logging` section)
 });
 
 rest.GET(resource, callback)
 rest.POST(resource, payload, callback)
 ```
 
-The `Rest` object, when instantiated, has an internal instance of the `OAuth` module accessible with `rest._oauth`. This is mainly used internally to automatically retrieve an `access_token`.
+> The `Rest` object, when instantiated, has an internal instance of the `OAuth` module accessible with `rest._oauth`. This is mainly used internally to automatically retrieve an `access_token`.
 
 Currently `GET`, `POST` and `DELETE` are supported.
 
@@ -83,8 +103,71 @@ function(error, response, body) {
 }
 ```
 
+### Logging
+
+Logging is supported by the lightweight JSON logging module called [Bunyan](https://github.com/trentm/node-bunyan).
+
+When you create a new instance of `OAuth2` or `Rest` you can pass a `logConfig` object with following options:
+
+```javascript
+// create new logger
+
+logConfig: {
+  levelStream: 'info' // log level for stdout stream
+  levelFile: 'debug' // log level for file stream
+  path: './sphere-node-connect-debug.log' // where to write the file stream
+  name: 'sphere-node-connect' // name of the application
+  serializers:
+    request: reqSerializer // function that maps the request object with fields (uri, method, headers)
+    response: resSerializer // function that maps the response object with fields (status, headers, body)
+  src: false // includes a log of the call source location (file, line, function).
+             // Determining the source call is slow, therefor it's recommended not to enable this on production.
+}
+```
+
+You can also plug-in an existing `Bunyan` logger. This is useful to connect sub-components of the same application by sharing the same configuration.
+This concept is called **[child logger](https://github.com/trentm/node-bunyan#logchild)**.
+
+```javascript
+// create new logger
+
+var logger = bunyan.createLogger({...})
+
+...
+
+logConfig: {
+  logger: logger
+}
+```
+
+Once you configure your logger, you will get JSON stream of logs based on the level you defined. This is great for processing, but not for really human-friendly.
+This is where the `bunyan` command-line tool comes in handy, by providing **pretty-printed** logs and **filtering**. More info [here](https://github.com/trentm/node-bunyan#cli-usage).
+
+```bash
+# examples
+
+# this will output the content of the log file in a `short` format
+bunyan sphere-node-connect-debug.log -o short
+00:31:47.760Z  INFO sphere-node-connect: Retrieving access_token...
+00:31:48.232Z  INFO sphere-node-connect: GET /products
+
+# directly pipe the stdout stream
+jasmine-node --verbose --captureExceptions test | ./node_modules/bunyan/bin/bunyan -o short
+00:34:03.936Z DEBUG sphere-node-connect: OAuth constructor initialized. (host=auth.sphere.io, accessTokenUrl=/oauth/token, timeout=20000, rejectUnauthorized=true)
+    config: {
+      "client_id": "S6AD07quPeeTfRoOHXdTx2NZ",
+      "client_secret": "7d3xSWTN5jQJNpnRnMLd4qICmfahGPka",
+      "project_key": "nicola",
+      "oauth_host": "auth.sphere.io",
+      "api_host": "api.sphere.io"
+    }
+00:34:03.933Z DEBUG sphere-node-connect: Failed to retrieve access_token, retrying...1
+
+```
+
 
 ## Examples
+
 ```javascript
 oa.getAccessToken(function(error, response, body){
   if (response.statusCode is 200) {
