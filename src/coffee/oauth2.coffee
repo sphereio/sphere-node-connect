@@ -22,7 +22,7 @@ class OAuth2
       timeout: opts.timeout or 20000
       rejectUnauthorized: rejectUnauthorized
 
-    @logger.debug @_options, 'OAuth constructor initialized.'
+    @logger.debug @_options, 'New OAuth object'
     return
 
   getAccessToken: (callback) ->

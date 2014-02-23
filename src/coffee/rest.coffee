@@ -34,18 +34,18 @@ class Rest
     if @_options.access_token
       @_options.headers['Authorization'] = "Bearer #{@_options.access_token}"
 
-    @logger.debug @_options, 'Rest constructor initialized.'
+    @logger.debug @_options, 'New Rest object'
     return
 
   GET: (resource, callback) ->
-    @logger.info 'GET', resource
+    @logger.info "Project '#{@_options.config.project_key}'", 'GET', resource
     params =
       resource: resource
       method: 'GET'
     @_preRequest(params, callback)
 
   POST: (resource, payload, callback) ->
-    @logger.info 'POST', resource, payload
+    @logger.info "Project '#{@_options.config.project_key}'", 'POST', resource, payload
     params =
       resource: resource
       method: 'POST'
@@ -53,15 +53,13 @@ class Rest
     @_preRequest(params, callback)
 
   DELETE: (resource, callback) ->
-    @logger.info 'DELETE', resource
+    @logger.info "Project '#{@_options.config.project_key}'", 'DELETE', resource
     params =
       resource: resource
       method: 'DELETE'
     @_preRequest(params, callback)
 
-  PUT: ->
-    @logger.warn 'PUT', 'Method not implemented yet'
-    throw new Error 'Not implemented yet'
+  PUT: -> throw new Error 'Not implemented yet'
 
   _preRequest: (params, callback) ->
     _req = (retry) =>
@@ -69,7 +67,6 @@ class Rest
         @_oauth.getAccessToken (error, response, body) =>
           if error
             if retry is 10
-              @logger.warn error, 'Error on retrieving access_token after 10 attempts.'
               throw new Error 'Error on retrieving access_token after 10 attempts.\n' +
                 "Error: #{error}\n"
             else
@@ -78,7 +75,6 @@ class Rest
           if response.statusCode isnt 200
             # try again to get an access token
             if retry is 10
-              @logger.warn body, 'Error on retrieving access_token after 10 attempts.'
               throw new Error 'Could not retrieve access_token after 10 attempts.\n' +
                 "Status code: #{response.statusCode}\n" +
                 "Body: #{body}\n"
