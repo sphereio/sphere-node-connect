@@ -38,25 +38,28 @@ class Rest
     return
 
   GET: (resource, callback) ->
-    @logger.info "Project '#{@_options.config.project_key}'", 'GET', resource
     params =
-      resource: resource
       method: 'GET'
+      resource: resource
+    @logger.debug _.extend {}, params,
+      project: @_options.config.project_key
     @_preRequest(params, callback)
 
   POST: (resource, payload, callback) ->
-    @logger.info "Project '#{@_options.config.project_key}'", 'POST', resource, payload
     params =
-      resource: resource
       method: 'POST'
+      resource: resource
       body: payload
+    @logger.debug _.extend {}, params,
+      project: @_options.config.project_key
     @_preRequest(params, callback)
 
   DELETE: (resource, callback) ->
-    @logger.info "Project '#{@_options.config.project_key}'", 'DELETE', resource
     params =
-      resource: resource
       method: 'DELETE'
+      resource: resource
+    @logger.debug _.extend {}, params,
+      project: @_options.config.project_key
     @_preRequest(params, callback)
 
   PUT: -> throw new Error 'Not implemented yet'
@@ -85,7 +88,7 @@ class Rest
             access_token = body.access_token
             @_options.access_token = access_token
             @_options.headers['Authorization'] = "Bearer #{@_options.access_token}"
-            @logger.info 'New access_token received', access_token
+            @logger.debug 'New access_token received', access_token
             # call itself again (this time with the access_token)
             _req(0)
       else
@@ -107,7 +110,7 @@ class Rest
   _doRequest: (options, callback) ->
     request options, (e, r, b) =>
       @logger.error e if e
-      @logger.debug request: r.request, response: r, 'Rest response'
+      @logger.debug {request: r.request, response: r}, 'Rest response'
       callback(e, r, b)
 
 ###

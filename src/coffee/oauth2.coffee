@@ -42,13 +42,13 @@ class OAuth2
       timeout: @_options.timeout
       rejectUnauthorized: @_options.rejectUnauthorized
 
-    @logger.info 'Retrieving access_token...'
+    @logger.debug request_options, 'Retrieving access_token...'
     @_doRequest(request_options, callback)
 
   _doRequest: (options, callback) ->
     request options, (e, r, b) =>
       @logger.error e if e
-      @logger.debug request: r.request, response: r, 'OAuth response'
+      @logger.debug {request: r.request, response: r}, 'OAuth response'
       callback(e, r, b)
 
 ###
