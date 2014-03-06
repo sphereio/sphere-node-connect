@@ -4,3 +4,4 @@ lib
 test
 config.js
 coverage
+.coveralls.yml

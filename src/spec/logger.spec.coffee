@@ -27,15 +27,23 @@ describe 'Logger', ->
       name: 'foo'
       serializers: foo: -> 'bar'
       src: true
+      streams: [
+        {level: 'warn', stream: process.stdout}
+      ]
 
     expect(log.streams[0].type).toBe 'stream'
-    expect(log.streams[0].level).toBe 50 # error
-    expect(log.streams[1].type).toBe 'file'
-    expect(log.streams[1].level).toBe 10 # trace
-    expect(log.streams[1].path).toBe './another-path.log'
+    expect(log.streams[0].level).toBe 40 # warn
+    expect(log.streams[1]).not.toBeDefined()
     expect(log.fields.name).toBe 'foo'
     expect(log.serializers.foo()).toBe 'bar'
     expect(log.src).toBe true
+
+  it 'should initialize with empty streams', ->
+    log = new Logger
+      streams: []
+
+    expect(log.streams.length).toBe 0
+    expect(log.streams[0]).not.toBeDefined()
 
   it 'should use given logger', ->
     existingLogger = new MyLogger()

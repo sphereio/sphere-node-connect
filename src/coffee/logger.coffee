@@ -36,7 +36,7 @@ module.exports = class
   ###
   constructor: (config = {}) ->
 
-    {levelStream, levelFile, path, logger, name, serializers, src, streams} = _.defaults config,
+    {levelStream, levelFile, path, logger, name, serializers, src} = _.defaults config,
       levelStream: @constructor.levelStream
       levelFile: @constructor.levelFile
       path: @constructor.path
@@ -45,7 +45,11 @@ module.exports = class
         request: @reqSerializer
         response: @resSerializer
       src: false # never use this option on production
-      streams: []
+    {streams} = _.defaults config,
+      streams: [
+        {level: levelStream, stream: process.stdout}
+        {level: levelFile, path: path}
+      ]
 
     if logger
       logger = logger.child widget_type: @constructor.appName
@@ -54,10 +58,7 @@ module.exports = class
         name: name
         src: src
         serializers: serializers
-        streams: _.extend streams, [
-          {level: levelStream, stream: process.stdout}
-          {level: levelFile, path: path}
-        ]
+        streams: streams
 
     return logger
 
