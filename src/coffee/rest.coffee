@@ -110,7 +110,7 @@ class Rest
   _doRequest: (options, callback) ->
     request options, (e, r, b) =>
       @logger.error e if e
-      @logger.debug {request: r.request, response: r}, 'Rest response'
+      @logger.debug {request: r?.request, response: r}, 'Rest response'
       callback(e, r, b)
 
 ###

@@ -48,7 +48,7 @@ class OAuth2
   _doRequest: (options, callback) ->
     request options, (e, r, b) =>
       @logger.error e if e
-      @logger.debug {request: r.request, response: r}, 'OAuth response'
+      @logger.debug {request: r?.request, response: r}, 'OAuth response'
       callback(e, r, b)
 
 ###

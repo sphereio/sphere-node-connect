@@ -159,3 +159,14 @@ describe 'Rest requests', ->
     rest = new Rest config: Config
     rest.logger.warn = -> # don't print to console
     expect(-> rest.PUT()).toThrow new Error 'Not implemented yet'
+
+  it 'should not fail to log if request times out', (done) ->
+    rest = new Rest
+      config: Config
+      timeout: 1
+      access_token: 'qwerty1234567890'
+    rest.logger.warn = -> # don't print to console
+    rest.logger.error = ->
+    rest._oauth.logger.error = ->
+    callMe = -> done()
+    expect(-> rest.GET('/products', callMe)).not.toThrow()

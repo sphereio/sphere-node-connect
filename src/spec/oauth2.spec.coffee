@@ -47,3 +47,11 @@ describe 'OAuth2', ->
       config: Config.prod
       rejectUnauthorized: false
     expect(oa._options.rejectUnauthorized).toBe false
+
+  it 'should not fail to log if request times out', (done) ->
+    oa = new OAuth2
+      config: Config.prod
+      timeout: 1
+    oa.logger.error = -> # don't print to console
+    callMe = -> done()
+    expect(-> oa.getAccessToken(callMe)).not.toThrow()
