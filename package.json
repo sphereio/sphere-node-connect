@@ -39,7 +39,8 @@
   "dependencies": {
     "bunyan": "~0.22.1",
     "request": "~2.34.0",
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "sphere-node-utils": "~0.2.2"
   },
   "devDependencies": {
     "coveralls": "~2.8.0",

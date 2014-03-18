@@ -1,4 +1,7 @@
-_ = require('underscore')._
+_ = require 'underscore'
+_u = require 'sphere-node-utils'
+_.mixin _.extend {}, _u,
+  percentage: (x, tot) -> Math.round(x * 100 / tot)
 request = require 'request'
 Logger = require './logger'
 OAuth2 = require './oauth2'
@@ -112,6 +115,62 @@ class Rest
       @logger.error e if e
       @logger.debug {request: r?.request, response: r}, 'Rest response'
       callback(e, r, b)
+
+  ###*
+   * Fetch all results of a Sphere resource query endpoint in batches of pages using a recursive function.
+   * Supports subscription of progress notifications.
+   *
+   * @param {String} resource The resource endpoint to be queried, with query string parameters.
+   *                          Note that `limit` should be 0 if set, otherwise throws an error. `offset` is always 0.
+   * @param {Function} resolve A function fulfilled with `error, response, body` arguments. Body is an {Object} of {PagedQueryResponse}
+   * @param {Function} [notify] A function fulfilled with `percentage, value` arguments. Value is an {Object} of the current body results.
+   *                            This function is called for each batch iteration, allowing you to track the progress.
+  ###
+  PAGED: (resource, resolve, notify) ->
+    splitted = resource.split('?')
+    endpoint = splitted[0]
+    query = _.fromQueryString splitted[1]
+
+    throw new Error 'Query limit doesn\'t seem to be 0. This function queries all results, are you sure you want to use this?' if query.limit and query.limit isnt 0
+
+    params = _.extend {}, query,
+      limit: 50 # limit used for batches
+      offset: 0
+    limit = params.limit
+
+    _buildPagedQueryResponse = (results) ->
+      tot = _.size(results)
+
+      offset: params.offset
+      count: tot
+      total: tot
+      results: results
+
+    tmpResponse = {}
+
+    _page = (offset, total, accumulator = []) =>
+      if total? and (offset + limit) >= total + limit
+        notify(percentage: 100, value: accumulator) if notify
+        # return if there are no more pages
+        resolve null, tmpResponse, _buildPagedQueryResponse(accumulator)
+      else
+        queryParams = _.toQueryString _.extend {}, params, offset: offset
+        @GET "#{endpoint}?#{queryParams}", (error, response, body) ->
+          notify(
+            percentage: if total then _.percentage(offset, total) else 0
+            value: accumulator
+          ) if notify
+          if error
+            resolve(error, response, body)
+          else
+            if response.statusCode is 200
+              tmpResponse = response
+              _page(offset + limit, body.total, accumulator.concat(body.results))
+            else
+              resolve(error, response, body)
+    _page(params.offset)
+    return
+
 
 ###
 Exports object
