@@ -1,10 +1,20 @@
-_ = require('underscore')._
+_ = require 'underscore'
 querystring = require 'querystring'
 request = require 'request'
 Logger = require './logger'
 
+###*
+ * Creates a new OAuth2 instance, used to connect to https://auth.sphere.io
+ * @class OAuth2
+###
 class OAuth2
 
+  ###*
+   * Initialize the class
+   * @constructor
+   * @param {Object} [opts] A JSON object containg configuration options
+   * @throws {Error} if credentials are missing
+  ###
   constructor: (opts = {}) ->
     config = opts.config
     throw new Error('Missing credentials') unless config
@@ -25,11 +35,16 @@ class OAuth2
     @logger.debug @_options, 'New OAuth object'
     return
 
+  ###*
+   * Retrieve an `access_token` to be able to access the HTTP API
+   * @param {Function} callback A function fulfilled with `error, response, body` arguments.
+  ###
   getAccessToken: (callback) ->
     params =
       grant_type: 'client_credentials'
       scope: "manage_project:#{@_options.config.project_key}"
 
+    # TODO: use querystring or mixins ?
     payload = querystring.stringify(params)
     request_options =
       uri: "https://#{@_options.config.client_id}:#{@_options.config.client_secret}@#{@_options.host}#{@_options.accessTokenUrl}"
@@ -45,6 +60,12 @@ class OAuth2
     @logger.debug request_options, 'Retrieving access_token...'
     @_doRequest(request_options, callback)
 
+  ###*
+   * Execute the request using the underling `request` module
+   * @link https://github.com/mikeal/request
+   * @param {Object} options A JSON object containing all required options for the request
+   * @param {Function} callback A function fulfilled with `error, response, body` arguments.
+  ###
   _doRequest: (options, callback) ->
     request options, (e, r, b) =>
       @logger.error e if e
