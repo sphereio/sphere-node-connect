@@ -1,13 +1,21 @@
 _ = require 'underscore'
-_u = require 'sphere-node-utils'
-_.mixin _.extend {}, _u,
-  percentage: (x, tot) -> Math.round(x * 100 / tot)
+_.mixin require('sphere-node-utils')._u
 request = require 'request'
 Logger = require './logger'
 OAuth2 = require './oauth2'
 
+###*
+ * Creates a new Rest instance, used to connect to https://api.sphere.io
+ * @class Rest
+###
 class Rest
 
+  ###*
+   * Initialize the class
+   * @constructor
+   * @param {Object} [opts] A JSON object containg configuration options
+   * @throws {Error} if credentials are missing
+  ###
   constructor: (opts = {}) ->
     config = opts.config
     throw new Error('Missing credentials') unless config
@@ -40,6 +48,11 @@ class Rest
     @logger.debug @_options, 'New Rest object'
     return
 
+  ###*
+   * Send a HTTP GET request to an API endpoint
+   * @param {String} resource The API resource endpoint, with query string parameters.
+   * @param {Function} callback A function fulfilled with `error, response, body` arguments.
+  ###
   GET: (resource, callback) ->
     params =
       method: 'GET'
@@ -48,6 +61,12 @@ class Rest
       project: @_options.config.project_key
     @_preRequest(params, callback)
 
+  ###*
+   * Send a HTTP POST request to an API endpoint
+   * @param {String} resource The API resource endpoint, with query string parameters.
+   * @param {Object} payload A JSON object used as `body` payload
+   * @param {Function} callback A function fulfilled with `error, response, body` arguments.
+  ###
   POST: (resource, payload, callback) ->
     params =
       method: 'POST'
@@ -57,6 +76,11 @@ class Rest
       project: @_options.config.project_key
     @_preRequest(params, callback)
 
+  ###*
+   * Send a HTTP DELETE request to an API endpoint
+   * @param {String} resource The API resource endpoint, with query string parameters.
+   * @param {Function} callback A function fulfilled with `error, response, body` arguments.
+  ###
   DELETE: (resource, callback) ->
     params =
       method: 'DELETE'
@@ -65,8 +89,17 @@ class Rest
       project: @_options.config.project_key
     @_preRequest(params, callback)
 
+  ###*
+   * @throws {Error} as there is currently no implementation
+  ###
   PUT: -> throw new Error 'Not implemented yet'
 
+  ###*
+   * Prepare the request to be sent by automatically retrieving an `access_token`
+   * @param {Object} params A JSON object containing all required parameters for the request
+   * @param {Function} callback A function fulfilled with `error, response, body` arguments.
+   * @throws {Error} if `access_token` could not be retrieved
+  ###
   _preRequest: (params, callback) ->
     _req = (retry) =>
       unless @_options.access_token
@@ -110,6 +143,12 @@ class Rest
 
     _req(0)
 
+  ###*
+   * Execute the request using the underling `request` module
+   * @link https://github.com/mikeal/request
+   * @param {Object} options A JSON object containing all required options for the request
+   * @param {Function} callback A function fulfilled with `error, response, body` arguments.
+  ###
   _doRequest: (options, callback) ->
     request options, (e, r, b) =>
       @logger.error e if e
@@ -119,12 +158,11 @@ class Rest
   ###*
    * Fetch all results of a Sphere resource query endpoint in batches of pages using a recursive function.
    * Supports subscription of progress notifications.
-   *
    * @param {String} resource The resource endpoint to be queried, with query string parameters.
-   *                          Note that `limit` should be 0 if set, otherwise throws an error. `offset` is always 0.
    * @param {Function} resolve A function fulfilled with `error, response, body` arguments. Body is an {Object} of {PagedQueryResponse}
    * @param {Function} [notify] A function fulfilled with `percentage, value` arguments. Value is an {Object} of the current body results.
    *                            This function is called for each batch iteration, allowing you to track the progress.
+   * @throws {Error} if `limit` param is not 0
   ###
   PAGED: (resource, resolve, notify) ->
     splitted = resource.split('?')
