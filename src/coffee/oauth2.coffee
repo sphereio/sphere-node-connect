@@ -1,5 +1,5 @@
 _ = require 'underscore'
-querystring = require 'querystring'
+_.mixin require('sphere-node-utils')._u
 request = require 'request'
 Logger = require './logger'
 
@@ -44,8 +44,7 @@ class OAuth2
       grant_type: 'client_credentials'
       scope: "manage_project:#{@_options.config.project_key}"
 
-    # TODO: use querystring or mixins ?
-    payload = querystring.stringify(params)
+    payload = _.stringifyQuery(params)
     request_options =
       uri: "https://#{@_options.config.client_id}:#{@_options.config.client_secret}@#{@_options.host}#{@_options.accessTokenUrl}"
       json: true

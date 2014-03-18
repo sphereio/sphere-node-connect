@@ -1,4 +1,4 @@
-_ = require('underscore')._
+_ = require 'underscore'
 Config = require('../config').config
 OAuth2 = require '../lib/oauth2'
 Rest = require '../lib/rest'

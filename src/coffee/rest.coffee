@@ -167,7 +167,7 @@ class Rest
   PAGED: (resource, resolve, notify) ->
     splitted = resource.split('?')
     endpoint = splitted[0]
-    query = _.fromQueryString splitted[1]
+    query = _.parseQuery splitted[1]
 
     throw new Error 'Query limit doesn\'t seem to be 0. This function queries all results, are you sure you want to use this?' if query.limit and query.limit isnt 0
 
@@ -192,7 +192,7 @@ class Rest
         # return if there are no more pages
         resolve null, tmpResponse, _buildPagedQueryResponse(accumulator)
       else
-        queryParams = _.toQueryString _.extend {}, params, offset: offset
+        queryParams = _.stringifyQuery _.extend {}, params, offset: offset
         @GET "#{endpoint}?#{queryParams}", (error, response, body) ->
           notify(
             percentage: if total then _.percentage(offset, total) else 0

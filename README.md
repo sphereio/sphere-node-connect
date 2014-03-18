@@ -11,7 +11,6 @@ Quick and easy way to connect your Node.js app with [SPHERE.IO](http://sphere.io
   * [Rest](#rest)
     * [Paged requests](#paged-requests)
   * [Error handling](#error-handling)
-  * [Logging](#logging)
 * [Examples](#examples)
 * [Contributing](#contributing)
 * [Releasing](#releasing)
@@ -142,69 +141,7 @@ It's always a good practice to check first for the existence of an `error` objec
 
 ### Logging
 
-Logging is supported by the lightweight JSON logging module called [Bunyan](https://github.com/trentm/node-bunyan).
-
-When you create a new instance of `OAuth2` or `Rest` you can pass a `logConfig` object with following options:
-
-```javascript
-// create new logger
-
-logConfig: {
-  levelStream: 'info' // log level for stdout stream
-  levelFile: 'debug' // log level for file stream
-  path: './sphere-node-connect-debug.log' // where to write the file stream
-  name: 'sphere-node-connect' // name of the application
-  serializers:
-    request: reqSerializer // function that maps the request object with fields (uri, method, headers)
-    response: resSerializer // function that maps the response object with fields (status, headers, body)
-  src: false // includes a log of the call source location (file, line, function).
-             // Determining the source call is slow, therefor it's recommended not to enable this on production.
-  streams: [ // a list of streams that defines the type of output for log messages
-    {level: 'info', stream: process.stdout}
-    {level: 'debug', path: './sphere-node-connect-debug.log'}
-  ]
-}
-```
-
-You can also plug-in an existing `Bunyan` logger. This is useful to connect sub-components of the same application by sharing the same configuration.
-This concept is called **[child logger](https://github.com/trentm/node-bunyan#logchild)**.
-
-```javascript
-// create new logger
-
-var logger = bunyan.createLogger({...})
-
-...
-
-logConfig: {
-  logger: logger
-}
-```
-
-Once you configure your logger, you will get JSON stream of logs based on the level you defined. This is great for processing, but not for really human-friendly.
-This is where the `bunyan` command-line tool comes in handy, by providing **pretty-printed** logs and **filtering**. More info [here](https://github.com/trentm/node-bunyan#cli-usage).
-
-```bash
-# examples
-
-# this will output the content of the log file in a `short` format
-bunyan sphere-node-connect-debug.log -o short
-00:31:47.760Z  INFO sphere-node-connect: Retrieving access_token...
-00:31:48.232Z  INFO sphere-node-connect: GET /products
-
-# directly pipe the stdout stream
-jasmine-node --verbose --captureExceptions test | ./node_modules/bunyan/bin/bunyan -o short
-00:34:03.936Z DEBUG sphere-node-connect: OAuth constructor initialized. (host=auth.sphere.io, accessTokenUrl=/oauth/token, timeout=20000, rejectUnauthorized=true)
-    config: {
-      "client_id": "S6AD07quPeeTfRoOHXdTx2NZ",
-      "client_secret": "7d3xSWTN5jQJNpnRnMLd4qICmfahGPka",
-      "project_key": "nicola",
-      "oauth_host": "auth.sphere.io",
-      "api_host": "api.sphere.io"
-    }
-00:34:03.933Z DEBUG sphere-node-connect: Failed to retrieve access_token, retrying...1
-
-```
+See [`sphere-node-utils`](https://github.com/sphereio/sphere-node-utils)
 
 
 ## Examples

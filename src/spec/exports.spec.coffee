@@ -1,4 +1,4 @@
-{Rest, OAuth2, Logger} = require '../lib/main'
+{Rest, OAuth2} = require '../lib/main'
 
 describe 'exports', ->
 
@@ -7,6 +7,3 @@ describe 'exports', ->
 
   it 'OAuth2', ->
     expect(OAuth2).toBeDefined()
-
-  it 'Logger', ->
-    expect(Logger).toBeDefined()
