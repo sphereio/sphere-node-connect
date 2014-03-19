@@ -39,7 +39,7 @@
   "dependencies": {
     "request": "~2.34.0",
     "underscore": "~1.6.0",
-    "sphere-node-utils": "~0.3.1"
+    "sphere-node-utils": "~0.3.2"
   },
   "devDependencies": {
     "coveralls": "~2.8.0",
