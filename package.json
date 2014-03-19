@@ -1,7 +1,7 @@
 {
   "name": "sphere-node-connect",
   "description": "Quick and easy way to connect your Node.js app with SPHERE.IO.",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "keywords": [
     "sphere",
     "api",
