@@ -9,22 +9,22 @@
     "oauth",
     "oauth2"
   ],
-  "homepage": "https://github.com/emmenko/sphere-node-connect",
+  "homepage": "https://github.com/sphereio/sphere-node-connect",
   "author": {
     "name": "Nicola Molinari",
     "email": "nicola.molinari@commercetools.de"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/emmenko/sphere-node-connect.git"
+    "url": "https://github.com/sphereio/sphere-node-connect.git"
   },
   "bugs": {
-    "url": "https://github.com/emmenko/sphere-node-connect/issues"
+    "url": "https://github.com/sphereio/sphere-node-connect/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/emmenko/sphere-node-connect/blob/master/LICENSE-MIT"
+      "url": "https://github.com/sphereio/sphere-node-connect/blob/master/LICENSE-MIT"
     }
   ],
   "main": "./lib/main",
