@@ -1,4 +1,6 @@
-# sphere-node-connect
+![SPHERE.IO icon](https://admin.sphere.io/assets/images/sphere_logo_rgb_long.png)
+
+# Node.js Connect
 
 [![Build Status](https://secure.travis-ci.org/sphereio/sphere-node-connect.png?branch=master)](http://travis-ci.org/sphereio/sphere-node-connect) [![NPM version](https://badge.fury.io/js/sphere-node-connect.png)](http://badge.fury.io/js/sphere-node-connect) [![Coverage Status](https://coveralls.io/repos/sphereio/sphere-node-connect/badge.png?branch=master)](https://coveralls.io/r/sphereio/sphere-node-connect?branch=master) [![Dependency Status](https://david-dm.org/sphereio/sphere-node-connect.png?theme=shields.io)](https://david-dm.org/sphereio/sphere-node-connect) [![devDependency Status](https://david-dm.org/sphereio/sphere-node-connect/dev-status.png?theme=shields.io)](https://david-dm.org/sphereio/sphere-node-connect#info=devDependencies)
 
