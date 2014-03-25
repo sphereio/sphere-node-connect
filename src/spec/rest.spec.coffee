@@ -229,6 +229,9 @@ describe 'Rest', ->
       it 'should throw if limit param is not 0', ->
         expect(=> @pagedRest.PAGED '/products?limit=100').toThrow new Error 'Query limit doesn\'t seem to be 0. This function queries all results, are you sure you want to use this?'
 
+      it 'should not throw if limit param is 0', (done) ->
+        expect(=> @pagedRest.PAGED '/products?limit=0', -> done()).not.toThrow()
+
       it 'should subscribe to notifications', (done) ->
         expectedProgress = 0
         @pagedRest.PAGED '/products', (e, r, b) ->

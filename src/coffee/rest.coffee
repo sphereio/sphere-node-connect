@@ -169,7 +169,7 @@ class Rest
     endpoint = splitted[0]
     query = _.parseQuery splitted[1]
 
-    throw new Error 'Query limit doesn\'t seem to be 0. This function queries all results, are you sure you want to use this?' if query.limit and query.limit isnt 0
+    throw new Error 'Query limit doesn\'t seem to be 0. This function queries all results, are you sure you want to use this?' if query.limit and query.limit isnt '0'
 
     params = _.extend {}, query,
       limit: 50 # limit used for batches
