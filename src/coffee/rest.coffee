@@ -196,7 +196,7 @@ class Rest
         @GET "#{endpoint}?#{queryParams}", (error, response, body) ->
           notify(
             percentage: if total then _.percentage(offset, total) else 0
-            value: accumulator
+            value: body
           ) if notify
           if error
             resolve(error, response, body)
