@@ -2,6 +2,8 @@
 
 # Node.js Connect
 
+[![NPM](https://nodei.co/npm/sphere-node-connect.png?downloads=true)](https://www.npmjs.org/package/sphere-node-connect)
+
 [![Build Status](https://secure.travis-ci.org/sphereio/sphere-node-connect.png?branch=master)](http://travis-ci.org/sphereio/sphere-node-connect) [![NPM version](https://badge.fury.io/js/sphere-node-connect.png)](http://badge.fury.io/js/sphere-node-connect) [![Coverage Status](https://coveralls.io/repos/sphereio/sphere-node-connect/badge.png?branch=master)](https://coveralls.io/r/sphereio/sphere-node-connect?branch=master) [![Dependency Status](https://david-dm.org/sphereio/sphere-node-connect.png?theme=shields.io)](https://david-dm.org/sphereio/sphere-node-connect) [![devDependency Status](https://david-dm.org/sphereio/sphere-node-connect/dev-status.png?theme=shields.io)](https://david-dm.org/sphereio/sphere-node-connect#info=devDependencies)
 
 Quick and easy way to connect your Node.js app with [SPHERE.IO](http://sphere.io) HTTP APIs.
