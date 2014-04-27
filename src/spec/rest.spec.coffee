@@ -73,8 +73,8 @@ describe 'Rest', ->
       @rest.logger.info = -> # don't print to console
       @rest._oauth.logger.info = -> # don't print to console
 
-      spyOn(@rest, '_doRequest').andCallFake (options, callback) -> callback(null, null, {id: '123'})
-      spyOn(@rest._oauth, 'getAccessToken').andCallFake (callback) -> callback(null, null, {access_token: 'foo'})
+      spyOn(@rest, '_doRequest').and.callFake (options, callback) -> callback(null, null, {id: '123'})
+      spyOn(@rest._oauth, 'getAccessToken').and.callFake (callback) -> callback(null, null, {access_token: 'foo'})
 
     afterEach ->
       @rest = null
@@ -112,7 +112,7 @@ describe 'Rest', ->
         rest.logger.info = -> # don't print to console
         rest.logger.warn = -> # don't print to console
         rest._oauth.logger.info = -> # don't print to console
-        spyOn(rest._oauth, 'getAccessToken').andCallFake (callback) -> callback(null, {statusCode: 401}, null)
+        spyOn(rest._oauth, 'getAccessToken').and.callFake (callback) -> callback(null, {statusCode: 401}, null)
         req = -> rest._preRequest(rest._oauth, {}, {}, -> )
         expect(req).toThrow new Error 'Could not retrieve access_token after 10 attempts.\n' +
           'Status code: 401\n' +
@@ -123,7 +123,7 @@ describe 'Rest', ->
         rest.logger.info = -> # don't print to console
         rest.logger.warn = -> # don't print to console
         rest._oauth.logger.info = -> # don't print to console
-        spyOn(rest._oauth, 'getAccessToken').andCallFake (callback) -> callback('Connection read timeout', null, null)
+        spyOn(rest._oauth, 'getAccessToken').and.callFake (callback) -> callback('Connection read timeout', null, null)
         req = -> rest._preRequest(rest._oauth, {}, {}, -> )
         expect(req).toThrow new Error 'Error on retrieving access_token after 10 attempts.\n' +
           'Error: Connection read timeout\n'
@@ -139,8 +139,8 @@ describe 'Rest', ->
         rest = new Rest config: Config
         rest.logger.info = -> # don't print to console
         rest._oauth.logger.info = -> # don't print to console
-        spyOn(rest._oauth, 'getAccessToken').andCallFake (callback) -> callback(null, {statusCode: 200}, {access_token: 'foo'})
-        spyOn(rest, '_doRequest').andCallFake (options, callback) -> callback(null, null, {id: '123'})
+        spyOn(rest._oauth, 'getAccessToken').and.callFake (callback) -> callback(null, {statusCode: 200}, {access_token: 'foo'})
+        spyOn(rest, '_doRequest').and.callFake (options, callback) -> callback(null, null, {id: '123'})
         prepareRequest done, 'GET', '/products', (callMe, expected_options) ->
           rest.GET('/products', callMe)
           expect(rest._oauth.getAccessToken).toHaveBeenCalledWith(jasmine.any(Function))
@@ -161,8 +161,8 @@ describe 'Rest', ->
         rest = new Rest config: Config
         rest.logger.info = -> # don't print to console
         rest._oauth.logger.info = -> # don't print to console
-        spyOn(rest._oauth, 'getAccessToken').andCallFake (callback) -> callback(null, {statusCode: 200}, {access_token: 'foo'})
-        spyOn(rest, '_doRequest').andCallFake (options, callback) -> callback(null, null, {id: '123'})
+        spyOn(rest._oauth, 'getAccessToken').and.callFake (callback) -> callback(null, {statusCode: 200}, {access_token: 'foo'})
+        spyOn(rest, '_doRequest').and.callFake (options, callback) -> callback(null, null, {id: '123'})
         prepareRequest done, 'POST', '/products', (callMe, expected_options) ->
           rest.POST('/products', {name: 'Foo'}, callMe)
           _.extend expected_options,
@@ -190,8 +190,8 @@ describe 'Rest', ->
         rest = new Rest config: Config
         rest.logger.info = -> # don't print to console
         rest._oauth.logger.info = -> # don't print to console
-        spyOn(rest._oauth, 'getAccessToken').andCallFake (callback) -> callback(null, {statusCode: 200}, {access_token: 'foo'})
-        spyOn(rest, '_doRequest').andCallFake (options, callback) -> callback(null, null, {id: '123'})
+        spyOn(rest._oauth, 'getAccessToken').and.callFake (callback) -> callback(null, {statusCode: 200}, {access_token: 'foo'})
+        spyOn(rest, '_doRequest').and.callFake (options, callback) -> callback(null, null, {id: '123'})
         prepareRequest done, 'DELETE', '/products?version=1', (callMe, expected_options) ->
           rest.DELETE('/products?version=1', callMe)
           expect(rest._oauth.getAccessToken).toHaveBeenCalledWith(jasmine.any(Function))
@@ -207,18 +207,18 @@ describe 'Rest', ->
         @pagedRest.logger.info = -> # don't print to console
         @pagedRest._oauth.logger.info = -> # don't print to console
 
-        spyOn(@pagedRest, '_doRequest').andCallFake (options, callback) ->
+        spyOn(@pagedRest, '_doRequest').and.callFake (options, callback) ->
           callback null, {statusCode: 200},
             total: 1000
             results: _.map [1..50], (i) -> {id: _.uniqueId("_#{i}"), value: 'foo'}
-        spyOn(@pagedRest._oauth, 'getAccessToken').andCallFake (callback) -> callback(null, null, {access_token: 'foo'})
+        spyOn(@pagedRest._oauth, 'getAccessToken').and.callFake (callback) -> callback(null, null, {access_token: 'foo'})
 
       afterEach ->
         @pagedRest = null
 
       it 'should send PAGED request', (done) ->
         @pagedRest.PAGED '/products', (e, r, b) ->
-          expect(e).toBe null
+          expect(e).toBeNull()
           expect(r.statusCode).toBe 200
           expect(b.total).toBe 1000
           expect(b.count).toBe 1000

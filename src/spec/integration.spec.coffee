@@ -44,14 +44,16 @@ _.each ['valid-ssl', 'self-signed-ssl'], (mode) ->
           expect(body.access_token).toBeDefined()
         done()
 
-    it 'should get products', (done) ->
-      @rest.GET '/products', (error, response, body) ->
-        expect(response.statusCode).toBe 200
-        expect(body).toBeDefined()
-        results = body.results
-        expect(results.length).toBeGreaterThan 0
-        expect(results[0].id).toEqual jasmine.any(String)
-        done()
+    it 'should create, get and delete channel', (done) ->
+      @rest.POST '/channels', {key: 'foo'}, (error, response, body) =>
+        @rest.GET '/channels?where=key+%3D+%22foo%22', (error, response, body) =>
+          expect(response.statusCode).toBe 200
+          expect(body).toBeDefined()
+          channel = body.results[0]
+          expect(channel.key).toEqual 'foo'
+          @rest.DELETE "/channels/#{channel.id}?version=#{channel.version}", (error, response, body) ->
+            expect(response.statusCode).toBe 200
+            done()
 
     it 'should return 404 if product is not found', (done) ->
       @rest.GET '/products/123', (error, response, body) ->
@@ -63,8 +65,7 @@ _.each ['valid-ssl', 'self-signed-ssl'], (mode) ->
         container: 'integration'
         key: 'foo'
         value: 'bar'
-      payload = JSON.stringify(data)
-      @rest.POST '/custom-objects', payload, (error, response, body) =>
+      @rest.POST '/custom-objects', data, (error, response, body) =>
         expect(response.statusCode).toBe 201
         @rest.DELETE '/custom-objects/integration/foo', (error, response, body) ->
           expect(response.statusCode).toBe 200
