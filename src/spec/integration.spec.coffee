@@ -6,7 +6,7 @@ Rest = require '../lib/rest'
 _.each ['valid-ssl', 'self-signed-ssl'], (mode) ->
   isSelfSigned = mode is 'self-signed-ssl'
 
-  describe "Integration test (#{mode})", ->
+  xdescribe "Integration test (#{mode})", ->
 
     beforeEach ->
       if isSelfSigned
