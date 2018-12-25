@@ -37,7 +37,7 @@
     "test": "grunt coverage"
   },
   "dependencies": {
-    "request": "2.40.0",
+    "request": "2.68.0",
     "underscore": "1.6.0",
     "sphere-node-utils": "0.4.13"
   },
